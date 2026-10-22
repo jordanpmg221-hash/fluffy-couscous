@@ -25,7 +25,9 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{gold:{400:'#facc15',500
 }
 </style>
 <style>
-body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-action:manipulation}
+body{font-family:'Inter',sans-serif;background:#0b0f17 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cg fill='none' stroke='%23eab308' stroke-opacity='.07' stroke-width='1.5'%3E%3Ccircle cx='45' cy='45' r='4'/%3E%3Cpath d='M0 0h8M0 0v8M90 90h-8M90 90v-8M45 20v8M45 62v8'/%3E%3C/g%3E%3C/svg%3E");color:#f3f4f6;touch-action:manipulation}
+.ci{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cardfront{background-image:repeating-linear-gradient(45deg,rgba(234,179,8,.06) 0 2px,transparent 2px 14px)}
 .persp{perspective:1000px}.preserve{transform-style:preserve-3d}
 .bf{backface-visibility:hidden;-webkit-backface-visibility:hidden}.ry{transform:rotateY(180deg)}
 .glow{box-shadow:0 0 20px rgba(234,179,8,.15)}
@@ -33,11 +35,40 @@ body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-actio
 </style>
 </head>
 <body class="min-h-screen flex flex-col overflow-x-hidden selection:bg-gold-500 selection:text-black">
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+<defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset=".5" stop-color="#facc15"/><stop offset="1" stop-color="#ca8a04"/></linearGradient></defs>
+<!-- LOGO PMG -->
+<symbol id="logo" viewBox="0 0 64 64"><path d="M32 3L57 17.5V46.5L32 61L7 46.5V17.5Z" fill="#0b0f17" stroke="url(#gg)" stroke-width="3" stroke-linejoin="round"/><path d="M32 8L52 19.5V44.5L32 56L12 44.5V19.5Z" fill="none" stroke="#eab308" stroke-opacity=".25" stroke-width="1"/><text x="32" y="37" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="800" font-size="19" fill="url(#gg)" letter-spacing="-.5">PMG</text><path d="M18 44H46" stroke="url(#gg)" stroke-width="2" stroke-linecap="round"/></symbol>
+<!-- ICONES DE ROLE -->
+<symbol id="r-civ" viewBox="0 0 64 64"><path d="M32 6L54 14V32C54 46 44 56 32 60C20 56 10 46 10 32V14Z" fill="#10b981" fill-opacity=".2" stroke="#34d399" stroke-width="3" stroke-linejoin="round"/><path d="M22 32L29 39L43 24" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="r-und" viewBox="0 0 64 64"><circle cx="32" cy="38" r="16" fill="#ef4444" fill-opacity=".15" stroke="#f87171" stroke-width="3"/><path d="M10 28H54" stroke="#f87171" stroke-width="4" stroke-linecap="round"/><path d="M19 28Q20 10 32 10Q44 10 45 28Z" fill="#f87171"/><rect x="19" y="35" width="11" height="7" rx="3" fill="#f87171"/><rect x="34" y="35" width="11" height="7" rx="3" fill="#f87171"/><path d="M30 38H34" stroke="#f87171" stroke-width="3"/><path d="M26 49Q32 52 38 49" fill="none" stroke="#f87171" stroke-width="3" stroke-linecap="round"/></symbol>
+<symbol id="r-mrw" viewBox="0 0 64 64"><path d="M12 56V30C12 16 21 8 32 8C43 8 52 16 52 30V56L45 50L38 56L32 50L26 56L19 50Z" fill="#06b6d4" fill-opacity=".2" stroke="#22d3ee" stroke-width="3" stroke-linejoin="round"/><circle cx="25" cy="29" r="3.5" fill="#22d3ee"/><circle cx="39" cy="29" r="3.5" fill="#22d3ee"/><path d="M27 40Q32 35 37 40" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 64 64"><path d="M20 10H44V28C44 36 38 42 32 42C26 42 20 36 20 28Z" fill="#eab308" fill-opacity=".25" stroke="#facc15" stroke-width="3" stroke-linejoin="round"/><path d="M20 16H10C10 28 14 32 22 33M44 16H54C54 28 50 32 42 33" fill="none" stroke="#facc15" stroke-width="3" stroke-linecap="round"/><path d="M32 42V52M22 56H42M26 52H38" stroke="#facc15" stroke-width="3" stroke-linecap="round"/></symbol>
+<!-- ICONES DE CATEGORIES -->
+<symbol id="c-food" viewBox="0 0 24 24"><path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M17 3c-2 2-3 5-3 8h3v10"/></symbol>
+<symbol id="c-animaux" viewBox="0 0 24 24"><circle cx="6" cy="10" r="1.6"/><circle cx="10" cy="6" r="1.6"/><circle cx="14" cy="6" r="1.6"/><circle cx="18" cy="10" r="1.6"/><path d="M12 12c-3 0-5 3-5 5 0 2 2 2.5 5 1.5 3 1 5 .5 5-1.5 0-2-2-5-5-5z"/></symbol>
+<symbol id="c-nature" viewBox="0 0 24 24"><path d="M5 19C5 10 10 5 20 4c0 10-5 15-14 15zM5 19l8-8"/></symbol>
+<symbol id="c-maison" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6"/></symbol>
+<symbol id="c-tech" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+<symbol id="c-mode" viewBox="0 0 24 24"><path d="M8 3L3 7l3 3 2-1v12h8V9l2 1 3-3-5-4a4 4 0 0 1-8 0z"/></symbol>
+<symbol id="c-lieux" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+<symbol id="c-transport" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="14" rx="2"/><path d="M4 11h16M7 18v2M17 18v2"/><circle cx="8" cy="14.5" r=".8"/><circle cx="16" cy="14.5" r=".8"/></symbol>
+<symbol id="c-metiers" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
+<symbol id="c-famille" viewBox="0 0 24 24"><path d="M12 21C4 15 3 10 3 8a4.5 4.5 0 0 1 9-1 4.5 4.5 0 0 1 9 1c0 2-1 7-9 13z"/></symbol>
+<symbol id="c-sport" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10zM12 3v4M16 10l5-1M14.5 15l3 4M9.5 15l-3 4M8 10L3 9"/></symbol>
+<symbol id="c-arts" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></symbol>
+<symbol id="c-ecole" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5zM6 11.5V17c3 2.5 9 2.5 12 0v-5.5M22 9v6"/></symbol>
+<symbol id="c-societe" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 21h18"/></symbol>
+<symbol id="c-corps" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></symbol>
+<symbol id="c-culture" viewBox="0 0 24 24"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/><path d="M19 16l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/></symbol>
+<symbol id="c-abstrait" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10c1 1 1 2 1 3h6c0-1 0-2 1-3a6 6 0 0 0-4-10z"/></symbol>
+<symbol id="c-perso" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol>
+</svg>
 
 <header class="border-b border-cardBorder/60 bg-cardBg/60 backdrop-blur-md sticky top-0 z-40">
  <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
   <div class="flex items-center gap-3">
-   <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-black text-xl"><i class="fa-solid fa-user-secret"></i></div>
+   <svg class="w-12 h-12 drop-shadow-[0_0_8px_rgba(234,179,8,.45)]" role="img" aria-label="Logo PMG"><use href="#logo"/></svg>
    <div><h1 class="text-xl font-bold bg-gradient-to-r from-amber-200 via-gold-400 to-amber-500 bg-clip-text text-transparent leading-none">UNDERCOVER</h1>
    <span class="text-[10px] text-gray-400 tracking-widest uppercase">Dashboard &amp; Game Manager</span>
    <span class="ml-1 px-1.5 py-0.5 rounded-md bg-gold-500/15 border border-gold-500/40 text-gold-400 text-[10px] font-extrabold tracking-widest">by PMG</span></div>
@@ -54,7 +85,7 @@ body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-actio
 
 <!-- SETUP -->
 <section id="s-setup" class="space-y-5">
- <div class="text-center"><h2 class="text-2xl sm:text-3xl font-extrabold">Configuration de la partie</h2>
+ <div class="text-center"><svg class="w-24 h-24 mx-auto mb-1 drop-shadow-[0_0_16px_rgba(234,179,8,.35)]" role="img" aria-label="Logo PMG"><use href="#logo"/></svg><h2 class="text-2xl sm:text-3xl font-extrabold">Configuration de la partie</h2>
  <p class="text-sm text-gray-400">Ajoutez les joueurs et réglez les rôles.</p></div>
  <button id="b-resume" onclick="resumeGame()" class="btn-gold w-full hidden py-3"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Reprendre la partie en cours</button>
 
@@ -107,8 +138,8 @@ body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-actio
  <p class="text-sm text-gray-400">Passez l'appareil à <span id="dist-name" class="text-gold-400 font-bold"></span></p></div>
  <div class="max-w-xs mx-auto persp my-6">
   <div id="card" onclick="flipCard()" class="relative w-full h-80 cursor-pointer preserve transition-transform duration-700 rounded-2xl shadow-2xl">
-   <div class="absolute inset-0 bf bg-gradient-to-br from-cardBg via-darkBg to-cardBg border-2 border-gold-500/40 rounded-2xl flex flex-col items-center justify-center p-6 gap-3 glow">
-    <div class="w-16 h-16 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 text-2xl"><i class="fa-solid fa-fingerprint"></i></div>
+   <div class="absolute inset-0 bf bg-gradient-to-br from-cardBg via-darkBg to-cardBg border-2 border-gold-500/40 rounded-2xl flex flex-col items-center justify-center p-6 gap-3 glow cardfront">
+    <div id="card-av"></div>
     <h3 id="card-front" class="text-xl font-bold"></h3>
     <p class="text-xs text-gray-400">Touchez pour révéler votre carte</p>
     <p class="text-[11px] text-amber-400/60 uppercase tracking-widest"><i class="fa-solid fa-eye-slash"></i> Gardez-le secret !</p>
@@ -116,6 +147,7 @@ body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-actio
    <div class="absolute inset-0 bf ry bg-gradient-to-br from-gray-900 via-cardBg to-gray-900 border-2 border-gold-400 rounded-2xl flex flex-col items-center justify-between p-6 shadow-2xl">
     <div class="w-full flex justify-between text-xs text-gray-400"><span>Rôle attribué</span><i class="fa-solid fa-user-secret text-gold-400"></i></div>
     <div class="space-y-3 my-auto">
+     <div id="card-ic" class="w-20 h-20 mx-auto"></div>
      <div id="card-badge"></div>
      <p class="text-xs text-gray-400">Votre mot secret :</p>
      <h2 id="card-word" class="text-3xl font-extrabold text-amber-300 break-words"></h2>
@@ -175,7 +207,7 @@ body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-actio
 <!-- GAME OVER -->
 <section id="s-over" class="hidden text-center space-y-5">
  <div class="space-y-2">
-  <div id="o-icon" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl"><i class="fa-solid fa-trophy"></i></div>
+  <div id="o-icon" class="w-28 h-28 rounded-full mx-auto flex items-center justify-center p-5"></div>
   <h2 id="o-title" class="text-3xl font-extrabold"></h2><p id="o-sub" class="text-sm text-gray-400"></p>
  </div>
  <div class="card max-w-md mx-auto glow space-y-3"><h3 class="lbl">Les mots de la partie</h3>
@@ -230,7 +262,7 @@ body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-actio
 
 <div id="toast" class="fixed bottom-16 left-1/2 -translate-x-1/2 bg-cardBg border border-gold-500/50 text-sm px-4 py-2 rounded-xl shadow-xl z-[60] hidden max-w-[90vw] text-center"></div>
 
-<footer class="border-t border-cardBorder/40 py-3 text-center text-xs text-gray-500">Undercover Dashboard &bull; Créé par <span class="font-extrabold tracking-widest bg-gradient-to-r from-amber-200 via-gold-400 to-amber-500 bg-clip-text text-transparent">PMG</span> &copy; 2026</footer>
+<footer class="border-t border-cardBorder/40 py-3 text-center text-xs text-gray-500">Undercover Dashboard &bull; <svg class="w-4 h-4 inline -mt-0.5 mr-0.5"><use href="#logo"/></svg> Créé par <span class="font-extrabold tracking-widest bg-gradient-to-r from-amber-200 via-gold-400 to-amber-500 bg-clip-text text-transparent">PMG</span> &copy; 2026</footer>
 
 <script>
 const RAW=`#food
@@ -295,10 +327,46 @@ let pair={civ:'',und:''};
 let G={list:[],dist:0,turn:0,round:1,clues:[],votes:{},pending:null};
 let sound=true,timerId=null,timeLeft=0,flipped=false,AC;
 
+/* ---------- IMAGES : avatars générés, icônes SVG ---------- */
+const ic=(id,c='w-5 h-5')=>`<svg class="${c}" aria-hidden="true"><use href="#${id}"/></svg>`;
+const AVN=24;let avs=load('uc_avs',{});
+const hashStr=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h};
+const avIdx=n=>avs[n]!=null?avs[n]:hashStr(n)%AVN;
+function rng(seed){let a=(seed+1)*2654435761>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function avatarSvg(seed,size){
+ const r=rng(seed),pick=a=>a[Math.floor(r()*a.length)];
+ const bg=pick(['#facc15','#34d399','#f87171','#22d3ee','#a78bfa','#fb923c','#f472b6','#60a5fa']),
+  shirt=pick(['#1f2937','#7c2d12','#14532d','#1e3a8a','#581c87','#374151']),
+  skin=pick(['#ffdbb4','#f1c9a5','#e0a97d','#c68642','#8d5524','#5c3a21']),
+  hc=pick(['#111827','#3b2314','#8b5a2b','#d4a017','#7a1f1f','#6b7280']),
+  hs=Math.floor(r()*5),ey=Math.floor(r()*3),mo=Math.floor(r()*3),ac=Math.floor(r()*4);
+ let s=`<svg viewBox="0 0 64 64" width="${size}" height="${size}" class="block" aria-hidden="true"><rect width="64" height="64" fill="${bg}"/>`;
+ if(hs===1)s+=`<path d="M17 30Q15 10 32 10Q49 10 47 30L48 50H16Z" fill="${hc}"/>`;
+ if(hs===2)s+=`<circle cx="32" cy="23" r="19" fill="${hc}"/>`;
+ s+=`<path d="M6 64Q8 47 32 46Q56 47 58 64Z" fill="${shirt}"/><rect x="28" y="38" width="8" height="10" fill="${skin}"/><ellipse cx="32" cy="29" rx="13" ry="15" fill="${skin}"/>`;
+ if(hs===0||hs===4)s+=`<path d="M19 27Q18 13 32 13Q46 13 45 27Q41 19 32 19Q23 19 19 27Z" fill="${hc}"/>`;
+ if(hs===4)s+=`<circle cx="32" cy="9" r="6" fill="${hc}"/>`;
+ if(hs===1)s+=`<path d="M19 27Q20 13 32 13Q44 13 45 27Q38 20 32 20Q26 20 19 27Z" fill="${hc}"/>`;
+ if(hs===2)s+=`<path d="M19 26Q22 16 32 16Q42 16 45 26Q38 21 32 21Q26 21 19 26Z" fill="${hc}"/>`;
+ if(hs===3)s+=`<path d="M18 26Q18 10 32 10Q46 10 46 26H52V29H12V26Z" fill="#1f2937"/><rect x="18" y="20" width="28" height="3" fill="#eab308"/>`;
+ if(ey===0)s+=`<circle cx="26.5" cy="30" r="2" fill="#111"/><circle cx="37.5" cy="30" r="2" fill="#111"/>`;
+ if(ey===1)s+=`<path d="M24 31Q26.5 28 29 31M35 31Q37.5 28 40 31" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/>`;
+ if(ey===2)s+=`<rect x="22" y="27.5" width="9" height="6" rx="2.5" fill="#111"/><rect x="33" y="27.5" width="9" height="6" rx="2.5" fill="#111"/>`;
+ if(mo===0)s+=`<path d="M26 38Q32 44 38 38" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/>`;
+ if(mo===1)s+=`<path d="M27 39H37" stroke="#111" stroke-width="2" stroke-linecap="round"/>`;
+ if(mo===2)s+=`<ellipse cx="32" cy="39.5" rx="4" ry="3" fill="#7f1d1d"/>`;
+ if(ac===1&&ey!==2)s+=`<g fill="none" stroke="#111" stroke-width="1.6"><circle cx="26.5" cy="30" r="5"/><circle cx="37.5" cy="30" r="5"/><path d="M31.5 30H32.5"/></g>`;
+ if(ac===2)s+=`<ellipse cx="32" cy="17" rx="20" ry="4" fill="#111827"/><path d="M21 17Q21 6 32 6Q43 6 43 17Z" fill="#111827"/><rect x="21" y="13" width="22" height="3" fill="#eab308"/>`;
+ return s+'</svg>'}
+const av=(n,size=36)=>`<span class="inline-block shrink-0 overflow-hidden rounded-full ring-2 ring-gold-500/40" style="width:${size}px;height:${size}px">${avatarSvg(avIdx(n),size)}</span>`;
+function cycleAv(i){const n=players[i];avs[n]=(avIdx(n)+1)%AVN;save('uc_avs',avs);renderSetup();beep('click')}
+(()=>{const s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#ca8a04"/></linearGradient></defs><path d="M32 3L57 17.5V46.5L32 61L7 46.5V17.5Z" fill="#0b0f17" stroke="url(#g)" stroke-width="4"/><text x="32" y="39" text-anchor="middle" font-family="Arial" font-weight="800" font-size="20" fill="url(#g)">PMG</text></svg>`;
+ const l=document.createElement('link');l.rel='icon';l.href='data:image/svg+xml,'+encodeURIComponent(s);document.head.appendChild(l)})();
+
 const ROLE={CIV:{l:'Civil',c:'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',d:"Décrivez votre mot sans le donner trop clairement."},
  UND:{l:'Undercover',c:'bg-red-500/20 text-red-400 border border-red-500/30',d:"Votre mot est légèrement différent. Fondez-vous dans la masse !"},
  MRW:{l:'Mr. White',c:'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30',d:"Vous n'avez AUCUN mot. Écoutez et bluffez !"}};
-const badge=r=>`<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${ROLE[r].c}">${ROLE[r].l}</span>`;
+const badge=r=>`<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase ${ROLE[r].c}">${ic('r-'+r.toLowerCase(),'w-3.5 h-3.5')}${ROLE[r].l}</span>`;
 
 function beep(t){if(!sound)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;
  const f={flip:[300,600,.1],click:[400,420,.05],win:[400,800,.5],tick:[900,950,.08]}[t];o.connect(g);g.connect(AC.destination);
@@ -319,14 +387,14 @@ function recommend(){const n=players.length;cfg.und=n<7?1:2;cfg.mrw=n<5?0:1;save
 function renderSetup(){
  const n=players.length,civ=Math.max(0,n-cfg.und-cfg.mrw);
  $('n-players').textContent=n;$('sel-timer').value=cfg.timer;
- $('chips').innerHTML=players.map((p,i)=>`<div class="flex items-center gap-2 px-3 py-1.5 bg-darkBg border border-cardBorder rounded-xl text-xs font-semibold">${esc(p)}<button onclick="removePlayer(${i})" class="text-gray-500 hover:text-red-400"><i class="fa-solid fa-xmark"></i></button></div>`).join('')||'<span class="text-xs text-gray-500 italic">Aucun joueur.</span>';
+ $('chips').innerHTML=players.map((p,i)=>`<div class="flex items-center gap-2 px-3 py-1.5 bg-darkBg border border-cardBorder rounded-xl text-xs font-semibold"><button onclick="cycleAv(${i})" title="Changer d'avatar">${av(p,28)}</button>${esc(p)}<button onclick="removePlayer(${i})" class="text-gray-500 hover:text-red-400"><i class="fa-solid fa-xmark"></i></button></div>`).join('')||'<span class="text-xs text-gray-500 italic">Aucun joueur.</span>';
  const row=(k,l,c,ic,sub)=>`<div class="flex justify-between items-center bg-darkBg/60 p-3 rounded-xl border border-cardBorder"><div><span class="font-semibold block ${c}"><i class="fa-solid ${ic} mr-1.5"></i>${l}</span><span class="text-xs text-gray-400">${sub}</span></div><div class="flex items-center gap-2"><button class="btn-ghost !px-2.5" onclick="adjust('${k}',-1)">−</button><span class="font-bold w-4 text-center">${cfg[k]}</span><button class="btn-ghost !px-2.5" onclick="adjust('${k}',1)">+</button></div></div>`;
  $('roles').innerHTML=row('und','Undercover(s)','text-red-400','fa-user-ninja','Mot légèrement différent')+row('mrw','Mr. White','text-cyan-400','fa-user-ghost','Aucun mot, doit bluffer')+
   `<div class="flex justify-between items-center bg-darkBg/30 p-3 rounded-xl border border-cardBorder/40"><span class="font-semibold text-emerald-400"><i class="fa-solid fa-user-shield mr-1.5"></i>Civils</span><span class="font-bold text-emerald-400 text-base">${civ}</span></div>`;
  const r=n<7?1:2,m=n<5?0:1;
  $('hint').innerHTML=`Conseillé pour ${n} joueurs : ${r} Undercover${r>1?'s':''}, ${m} Mr. White. <button class="text-gold-400 underline" onclick="recommend()">Appliquer</button>`;
  const cnt={};allPairs().filter(p=>cfg.diff.includes(p.d)).forEach(p=>cnt[p.cat]=(cnt[p.cat]||0)+1);
- $('cats').innerHTML=Object.entries(CATS).filter(([k])=>k!=='perso'||customPairs.length).map(([k,[l,e]])=>{const on=selCats().includes(k);return `<button onclick="toggleCat('${k}')" class="px-2.5 py-1 rounded-xl text-xs border transition ${on?'bg-gold-500/20 border-gold-500 text-gold-300':'bg-darkBg border-cardBorder text-gray-500'}">${e} ${l} <span class="opacity-60">${cnt[k]||0}</span></button>`}).join('');
+ $('cats').innerHTML=Object.entries(CATS).filter(([k])=>k!=='perso'||customPairs.length).map(([k,[l,e]])=>{const on=selCats().includes(k);return `<button onclick="toggleCat('${k}')" class="px-2.5 py-1 rounded-xl text-xs border transition ${on?'bg-gold-500/20 border-gold-500 text-gold-300':'bg-darkBg border-cardBorder text-gray-500'}"><svg class="ci w-3.5 h-3.5 inline -mt-0.5"><use href="#c-${k}"/></svg> ${l} <span class="opacity-60">${cnt[k]||0}</span></button>`}).join('');
  $('diffs').innerHTML=[1,2,3].map(d=>{const on=cfg.diff.includes(d);return `<button onclick="toggleDiff(${d})" class="px-3 py-1 rounded-xl text-xs border transition ${on?'bg-gold-500/20 border-gold-500 '+DIFF[d][1]:'bg-darkBg border-cardBorder text-gray-500'}">${DIFF[d][0]}</button>`}).join('');
  $('n-bank').textContent=filtered().length;
  $('b-resume').classList.toggle('hidden',!load('uc_game',null));
@@ -356,7 +424,7 @@ function setupCard(){
  const p=G.list[G.dist],n=G.list.length;
  $('dist-name').textContent=p.name;$('dist-i').textContent=G.dist+1;$('dist-n').textContent=n;$('dist-bar').style.width=(G.dist/n*100)+'%';
  $('card').classList.remove('ry');flipped=false;
- $('card-front').textContent=p.name;$('card-word').textContent=p.role==='MRW'?'AUCUN MOT':p.word;
+ $('card-front').textContent=p.name;$('card-av').innerHTML=av(p.name,96);$('card-ic').innerHTML=ic('r-'+p.role.toLowerCase(),'w-full h-full');$('card-word').textContent=p.role==='MRW'?'AUCUN MOT':p.word;
  $('card-badge').innerHTML=badge(p.role);$('card-desc').textContent=ROLE[p.role].d;
 }
 function flipCard(){flipped=!flipped;$('card').classList.toggle('ry',flipped);if(flipped)beep('flip')}
@@ -372,12 +440,12 @@ function renderDash(){
  $('d-turn').textContent=voting?'Phase de vote 🗳️':al[G.turn].name;
  $('d-clue-box').classList.toggle('hidden',voting);
  $('d-players').innerHTML=al.map((p,i)=>`<div class="card flex items-center justify-between gap-2 ${i===G.turn?'!border-gold-500':''}">
-  <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-darkBg border border-cardBorder flex items-center justify-center font-bold">${esc(p.name[0].toUpperCase())}</div>
+  <div class="flex items-center gap-3">${av(p.name,40)}
   <div><div class="font-bold">${esc(p.name)}</div><div class="text-[11px] text-gray-400">${i<G.turn?'Indice donné':i===G.turn?'À son tour':'En attente'}</div></div></div>
   <div class="flex items-center gap-2"><button class="btn-ghost !px-2.5" onclick="vote(${p.id},-1)">−</button><span class="w-5 text-center font-extrabold text-amber-300">${G.votes[p.id]||0}</span><button class="btn-ghost !px-2.5" onclick="vote(${p.id},1)">+</button></div></div>`).join('');
  $('d-clues').innerHTML=G.clues.length?G.clues.slice().reverse().map(c=>`<div class="text-xs"><span class="text-gold-400 font-bold">M${c.r}</span> <b>${esc(c.n)}</b> : ${esc(c.t)}</div>`).join(''):'<span class="text-xs text-gray-500 italic">Aucun indice noté.</span>';
  const dead=G.list.filter(p=>!p.alive);$('d-ecount').textContent=dead.length;
- $('d-elim').innerHTML=dead.length?dead.map(p=>`<div class="px-2 py-1 bg-darkBg/80 border border-cardBorder rounded-xl text-xs flex items-center gap-2 text-gray-400"><span class="line-through">${esc(p.name)}</span>${badge(p.role)}</div>`).join(''):'<span class="text-xs text-gray-500 italic">Personne pour l\'instant.</span>';
+ $('d-elim').innerHTML=dead.length?dead.map(p=>`<div class="px-2 py-1 bg-darkBg/80 border border-cardBorder rounded-xl text-xs flex items-center gap-2 text-gray-400"><span class="grayscale opacity-70">${av(p.name,22)}</span><span class="line-through">${esc(p.name)}</span>${badge(p.role)}</div>`).join(''):'<span class="text-xs text-gray-500 italic">Personne pour l\'instant.</span>';
 }
 function startTimer(){clearInterval(timerId);const t=$('d-timer');
  if(!cfg.timer||G.turn>=alive().length){t.textContent='';return}
@@ -408,16 +476,16 @@ function checkWin(){const al=alive(),civ=al.filter(p=>p.role==='CIV').length,en=
 /* ---------- END ---------- */
 function endGame(res){
  clearInterval(timerId);beep('win');localStorage.removeItem('uc_game');show('s-over');
- const T={CIV:['Victoire des Civils !','Tous les Undercovers et Mr. White ont été démasqués.','bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'],
-  ENEMY:['Victoire des infiltrés !','Les Undercovers (et Mr. White) ont survécu jusqu\'au bout.','bg-red-500/20 text-red-400 border border-red-500/40'],
-  MRW:['Victoire de Mr. White !','Il a deviné le mot secret des Civils. Coup de maître !','bg-cyan-500/20 text-cyan-400 border border-cyan-500/40']}[res];
- $('o-icon').className='w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl '+T[2];
+ const T={CIV:['Victoire des Civils !','Tous les Undercovers et Mr. White ont été démasqués.','bg-emerald-500/20 text-emerald-400 border border-emerald-500/40','i-trophy'],
+  ENEMY:['Victoire des infiltrés !','Les Undercovers (et Mr. White) ont survécu jusqu\'au bout.','bg-red-500/20 text-red-400 border border-red-500/40','r-und'],
+  MRW:['Victoire de Mr. White !','Il a deviné le mot secret des Civils. Coup de maître !','bg-cyan-500/20 text-cyan-400 border border-cyan-500/40','r-mrw']}[res];
+ $('o-icon').className='w-28 h-28 rounded-full mx-auto flex items-center justify-center p-5 '+T[2];$('o-icon').innerHTML=ic(T[3],'w-full h-full');
  $('o-title').textContent=T[0];$('o-sub').textContent=T[1];$('o-civ').textContent=pair.civ;$('o-und').textContent=pair.und;
  stats.games++;if(res==='CIV')stats.civWins++;else if(res==='MRW')stats.mrwWins++;else stats.undWins++;
  G.list.forEach(p=>{const s=stats.players[p.name]||(stats.players[p.name]={games:0,wins:0});s.games++;
   if((res==='CIV'&&p.role==='CIV')||(res==='ENEMY'&&p.role!=='CIV')||(res==='MRW'&&p.role==='MRW'))s.wins++});
  save('uc_stats',stats);
- $('o-recap').innerHTML=G.list.map(p=>`<div class="flex justify-between items-center bg-darkBg p-3 rounded-xl border border-cardBorder text-xs"><div class="flex items-center gap-2"><b>${esc(p.name)}</b>${badge(p.role)}${p.alive?'':'<span class="text-gray-500">éliminé</span>'}</div><span class="text-gray-400 italic font-mono">${p.role==='MRW'?'aucun mot':esc(p.word)}</span></div>`).join('');
+ $('o-recap').innerHTML=G.list.map(p=>`<div class="flex justify-between items-center bg-darkBg p-3 rounded-xl border border-cardBorder text-xs"><div class="flex items-center gap-2">${av(p.name,30)}<b>${esc(p.name)}</b>${badge(p.role)}${p.alive?'':'<span class="text-gray-500">éliminé</span>'}</div><span class="text-gray-400 italic font-mono">${p.role==='MRW'?'aucun mot':esc(p.word)}</span></div>`).join('');
 }
 function abandon(){if(confirm('Abandonner la partie en cours ?')){localStorage.removeItem('uc_game');show('s-setup')}}
 function resumeGame(){const s=load('uc_game',null);if(!s)return;G=s.G;pair=s.pair;show('s-dash');startTimer();renderDash();
@@ -434,7 +502,7 @@ function openStats(){
  const k=(l,v,c)=>`<div class="bg-darkBg p-2 rounded-xl border border-cardBorder"><span class="text-[10px] ${c} uppercase block">${l}</span><span class="text-lg font-extrabold ${c}">${v}</span></div>`;
  $('st-top').innerHTML=k('Parties',stats.games,'text-white')+k('Civils',stats.civWins,'text-emerald-400')+k('Infiltrés',stats.undWins,'text-red-400')+k('Mr. W',stats.mrwWins,'text-cyan-400');
  const arr=Object.entries(stats.players).map(([n,s])=>({n,...s})).sort((a,b)=>b.wins-a.wins);
- $('st-board').innerHTML=arr.length?arr.map(p=>`<div class="flex justify-between bg-darkBg p-2.5 rounded-xl border border-cardBorder text-xs"><b>${esc(p.n)}</b><span class="text-amber-400 font-extrabold">${p.wins} victoire${p.wins>1?'s':''} <span class="text-gray-500 font-normal">/ ${p.games} parties (${Math.round(p.wins/p.games*100)}%)</span></span></div>`).join(''):'<span class="text-xs text-gray-500 italic">Aucune donnée.</span>';
+ $('st-board').innerHTML=arr.length?arr.map(p=>`<div class="flex justify-between bg-darkBg p-2.5 rounded-xl border border-cardBorder text-xs"><span class="flex items-center gap-2">${av(p.n,24)}<b>${esc(p.n)}</b></span><span class="text-amber-400 font-extrabold">${p.wins} victoire${p.wins>1?'s':''} <span class="text-gray-500 font-normal">/ ${p.games} parties (${Math.round(p.wins/p.games*100)}%)</span></span></div>`).join(''):'<span class="text-xs text-gray-500 italic">Aucune donnée.</span>';
  openM('m-stats')}
 function resetStats(){if(confirm('Réinitialiser les statistiques ?')){stats={games:0,civWins:0,undWins:0,mrwWins:0,players:{}};save('uc_stats',stats);openStats()}}
 function openPreview(){$('pv-civ').textContent=pair.civ;$('pv-und').textContent=pair.und;$('pv').classList.add('blur-md');openM('m-prev')}
