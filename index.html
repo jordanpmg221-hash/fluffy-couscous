@@ -1,1127 +1,443 @@
 <!DOCTYPE html>
 <html lang="fr" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undercover - Dashboard Interactif</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        gold: {
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                            700: '#a16207',
-                        },
-                        darkBg: '#0b0f17',
-                        cardBg: '#161e2e',
-                        cardBorder: '#273549'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome & Lucide Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0b0f17;
-            color: #f3f4f6;
-            touch-action: manipulation;
-        }
-
-        /* Card Flip Animations */
-        .perspective-1000 {
-            perspective: 1000px;
-        }
-        .transform-style-3d {
-            transform-style: preserve-3d;
-        }
-        .backface-hidden {
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-            transform: rotateY(180deg);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0b0f17;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #273549;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ca8a04;
-        }
-
-        /* Glow Effects */
-        .gold-glow {
-            box-shadow: 0 0 20px rgba(234, 179, 8, 0.15);
-        }
-        .gold-glow-lg {
-            box-shadow: 0 0 35px rgba(234, 179, 8, 0.25);
-        }
-        .gold-border-glow {
-            border-color: rgba(234, 179, 8, 0.4);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Undercover - Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={darkMode:'class',theme:{extend:{colors:{gold:{400:'#facc15',500:'#eab308',600:'#ca8a04'},darkBg:'#0b0f17',cardBg:'#161e2e',cardBorder:'#273549'},fontFamily:{sans:['Inter','sans-serif']}}}}
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style type="text/tailwindcss">
+@layer components{
+.card{@apply bg-cardBg/80 border border-cardBorder rounded-2xl p-4 shadow-lg}
+.inp{@apply w-full p-2.5 bg-darkBg border border-cardBorder rounded-xl text-sm focus:outline-none focus:border-gold-500}
+.btn{@apply px-4 py-2 rounded-xl text-xs font-semibold border transition active:scale-95}
+.btn-gold{@apply btn bg-gradient-to-r from-gold-400 to-gold-600 text-black border-transparent font-extrabold uppercase tracking-wider}
+.btn-ghost{@apply btn bg-cardBg border-cardBorder text-gray-300 hover:text-gold-400}
+.btn-red{@apply btn bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20}
+.modal{@apply fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4}
+.lbl{@apply text-xs font-bold text-gold-400 uppercase tracking-wider}
+}
+</style>
+<style>
+body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-action:manipulation}
+.persp{perspective:1000px}.preserve{transform-style:preserve-3d}
+.bf{backface-visibility:hidden;-webkit-backface-visibility:hidden}.ry{transform:rotateY(180deg)}
+.glow{box-shadow:0 0 20px rgba(234,179,8,.15)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#273549;border-radius:4px}
+</style>
 </head>
-<body class="min-h-screen bg-darkBg text-gray-100 flex flex-col justify-between overflow-x-hidden selection:bg-gold-500 selection:text-black">
+<body class="min-h-screen flex flex-col overflow-x-hidden selection:bg-gold-500 selection:text-black">
 
-    <!-- Header Navigation -->
-    <header class="border-b border-cardBorder/60 bg-cardBg/60 backdrop-blur-md sticky top-0 z-40">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-black font-extrabold text-xl shadow-lg shadow-gold-500/20">
-                    <i class="fa-solid me-0.5 fa-user-secret"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold bg-gradient-to-r from-amber-200 via-gold-400 to-amber-500 bg-clip-text text-transparent leading-none">
-                        UNDERCOVER
-                    </h1>
-                    <span class="text-[10px] text-gray-400 font-medium tracking-widest uppercase">Dashboard & Game Manager</span>
-                </div>
-            </div>
+<header class="border-b border-cardBorder/60 bg-cardBg/60 backdrop-blur-md sticky top-0 z-40">
+ <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+  <div class="flex items-center gap-3">
+   <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-black text-xl"><i class="fa-solid fa-user-secret"></i></div>
+   <div><h1 class="text-xl font-bold bg-gradient-to-r from-amber-200 via-gold-400 to-amber-500 bg-clip-text text-transparent leading-none">UNDERCOVER</h1>
+   <span class="text-[10px] text-gray-400 tracking-widest uppercase">Dashboard &amp; Game Manager</span></div>
+  </div>
+  <div class="flex gap-2">
+   <button id="b-sound" onclick="toggleSound()" class="btn-ghost" title="Son"><i class="fa-solid fa-volume-high"></i></button>
+   <button onclick="openStats()" class="btn-ghost" title="Statistiques"><i class="fa-solid fa-chart-pie"></i></button>
+   <button onclick="openWords()" class="btn-ghost" title="Mes mots"><i class="fa-solid fa-book-bookmark"></i></button>
+  </div>
+ </div>
+</header>
 
-            <div class="flex items-center gap-2">
-                <button id="btn-sound-toggle" onclick="toggleSound()" class="p-2 rounded-lg bg-cardBg border border-cardBorder text-gray-400 hover:text-gold-400 transition-colors" title="Activer/Désactiver le son">
-                    <i class="fa-solid fa-volume-high text-sm"></i>
-                </button>
-                <button onclick="openStatsModal()" class="p-2 rounded-lg bg-cardBg border border-cardBorder text-gray-400 hover:text-gold-400 transition-colors" title="Statistiques">
-                    <i class="fa-solid fa-chart-pie text-sm"></i>
-                </button>
-                <button onclick="openCustomWordsModal()" class="p-2 rounded-lg bg-cardBg border border-cardBorder text-gray-400 hover:text-gold-400 transition-colors" title="Mots Personnalisés">
-                    <i class="fa-solid fa-book-bookmark text-sm"></i>
-                </button>
-            </div>
-        </div>
-    </header>
+<main class="max-w-4xl w-full mx-auto p-4 flex-1 flex flex-col justify-center">
 
-    <!-- Main Container -->
-    <main class="max-w-4xl w-full mx-auto p-4 flex-1 flex flex-col justify-center my-2">
+<!-- SETUP -->
+<section id="s-setup" class="space-y-5">
+ <div class="text-center"><h2 class="text-2xl sm:text-3xl font-extrabold">Configuration de la partie</h2>
+ <p class="text-sm text-gray-400">Ajoutez les joueurs et réglez les rôles.</p></div>
+ <button id="b-resume" onclick="resumeGame()" class="btn-gold w-full hidden py-3"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Reprendre la partie en cours</button>
 
-        <!-- ================= SETUP SCREEN ================= -->
-        <section id="screen-setup" class="space-y-6 transition-all duration-300">
-            <div class="text-center space-y-2">
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-100">Configuration de la Partie</h2>
-                <p class="text-sm text-gray-400">Ajoutez les joueurs et configurez les rôles secrets.</p>
-            </div>
+ <div class="card glow">
+  <div class="flex gap-2 mb-3">
+   <input id="in-name" maxlength="20" placeholder="Nom du joueur" class="inp" onkeydown="if(event.key==='Enter')addPlayer()">
+   <button onclick="addPlayer()" class="btn-gold whitespace-nowrap"><i class="fa-solid fa-plus"></i> Ajouter</button>
+  </div>
+  <div class="flex justify-between text-xs text-gray-400 uppercase font-semibold px-1 mb-2">
+   <span>Joueurs (<span id="n-players">0</span>)</span><span class="text-amber-400/80">3 à 12 conseillés</span></div>
+  <div id="chips" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto"></div>
+ </div>
 
-            <!-- Player Input Form -->
-            <div class="bg-cardBg/80 border border-cardBorder rounded-2xl p-4 sm:p-6 shadow-xl backdrop-blur-sm gold-glow">
-                <div class="flex flex-col sm:flex-row gap-3 mb-4">
-                    <div class="relative flex-1">
-                        <i class="fa-solid fa-user-plus absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"></i>
-                        <input type="text" id="input-player-name" placeholder="Nom du joueur (ex: Alex)" 
-                               class="w-full pl-10 pr-4 py-2.5 bg-darkBg border border-cardBorder rounded-xl text-gray-100 placeholder-gray-500 focus:outline-none focus:border-gold-500 transition-colors text-sm"
-                               onkeypress="if(event.key === 'Enter') addPlayer()">
-                    </div>
-                    <button onclick="addPlayer()" class="px-5 py-2.5 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-black font-semibold rounded-xl text-sm transition-all shadow-md shadow-gold-500/10 active:scale-95 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Ajouter
-                    </button>
-                </div>
+ <div class="card space-y-3">
+  <div class="flex justify-between items-center"><h3 class="lbl"><i class="fa-solid fa-filter"></i> Catégories &amp; difficulté</h3>
+  <button onclick="allCats()" class="text-xs text-gold-400 underline">Tout / rien</button></div>
+  <div id="cats" class="flex flex-wrap gap-2"></div>
+  <div class="flex flex-wrap items-center gap-2"><span class="text-xs text-gray-400">Difficulté :</span><div id="diffs" class="flex gap-2"></div></div>
+  <p class="text-[11px] text-gray-500">Facile : mots éloignés, l'infiltré est vite repéré. Difficile : mots très proches, le bluff est plus facile.</p>
+ </div>
 
-                <!-- Players List -->
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center text-xs text-gray-400 uppercase font-semibold px-1">
-                        <span>Joueurs Inscrits (<span id="player-count">0</span>)</span>
-                        <span class="text-[11px] text-amber-400/80">3 à 12 joueurs suggérés</span>
-                    </div>
-                    <div id="players-container" class="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-1">
-                        <!-- Dynamic Player Chips -->
-                    </div>
-                </div>
-            </div>
+ <div class="grid md:grid-cols-2 gap-4">
+  <div class="card space-y-3">
+   <h3 class="lbl"><i class="fa-solid fa-sliders"></i> Rôles</h3>
+   <div id="roles" class="space-y-2 text-sm"></div>
+   <div id="hint" class="text-xs text-gray-400"></div>
+  </div>
+  <div class="card flex flex-col justify-between gap-3">
+   <div class="space-y-3">
+    <h3 class="lbl"><i class="fa-solid fa-font"></i> Mots &amp; minuteur</h3>
+    <label class="flex items-center gap-3 p-3 bg-darkBg/60 rounded-xl border border-cardBorder cursor-pointer text-sm">
+     <input type="radio" name="wm" value="auto" checked onchange="toggleMode()"> <span><b>Banque automatique</b><br><span class="text-xs text-gray-400"><span id="n-bank">0</span> paires selon vos filtres, sans répétition</span></span></label>
+    <label class="flex items-center gap-3 p-3 bg-darkBg/60 rounded-xl border border-cardBorder cursor-pointer text-sm">
+     <input type="radio" name="wm" value="custom" onchange="toggleMode()"> <span><b>Mots sur-mesure</b></span></label>
+    <div id="custom-in" class="hidden grid grid-cols-2 gap-2">
+     <input id="cw-civ" class="inp" placeholder="Mot Civil"><input id="cw-und" class="inp" placeholder="Mot Undercover"></div>
+    <div class="flex items-center justify-between text-sm"><span class="text-gray-300">Minuteur par indice</span>
+     <select id="sel-timer" class="inp !w-28" onchange="cfg.timer=+this.value;save('uc_cfg',cfg)">
+      <option value="0">Désactivé</option><option value="30">30 s</option><option value="45">45 s</option><option value="60">60 s</option><option value="90">90 s</option></select></div>
+   </div>
+   <button onclick="startGame()" class="btn-gold w-full py-3.5 text-base"><i class="fa-solid fa-play mr-1"></i> Lancer la partie</button>
+  </div>
+ </div>
+</section>
 
-            <!-- Settings & Role Balance -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Role Distribution Settings -->
-                <div class="bg-cardBg/80 border border-cardBorder rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
-                    <h3 class="text-sm font-bold text-gold-400 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-sliders"></i> Répartition des Rôles
-                    </h3>
-                    
-                    <div class="space-y-3 text-sm">
-                        <!-- Undercover count -->
-                        <div class="flex justify-between items-center bg-darkBg/60 p-3 rounded-xl border border-cardBorder">
-                            <div>
-                                <span class="font-semibold block text-red-400"><i class="fa-solid fa-user-ninja mr-1.5"></i> Undercover(s)</span>
-                                <span class="text-xs text-gray-400">A un mot légèrement différent</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="adjustRole('undercover', -1)" class="w-7 h-7 rounded-lg bg-cardBg border border-cardBorder text-gray-300 hover:border-gold-500 flex items-center justify-center">-</button>
-                                <span id="count-undercover" class="font-bold w-4 text-center">1</span>
-                                <button onclick="adjustRole('undercover', 1)" class="w-7 h-7 rounded-lg bg-cardBg border border-cardBorder text-gray-300 hover:border-gold-500 flex items-center justify-center">+</button>
-                            </div>
-                        </div>
-
-                        <!-- Mr. White count -->
-                        <div class="flex justify-between items-center bg-darkBg/60 p-3 rounded-xl border border-cardBorder">
-                            <div>
-                                <span class="font-semibold block text-cyan-400"><i class="fa-solid fa-user-ghost mr-1.5"></i> Mr. White</span>
-                                <span class="text-xs text-gray-400">N'a AUCUN mot, doit bluffer</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="adjustRole('mrwhite', -1)" class="w-7 h-7 rounded-lg bg-cardBg border border-cardBorder text-gray-300 hover:border-gold-500 flex items-center justify-center">-</button>
-                                <span id="count-mrwhite" class="font-bold w-4 text-center">1</span>
-                                <button onclick="adjustRole('mrwhite', 1)" class="w-7 h-7 rounded-lg bg-cardBg border border-cardBorder text-gray-300 hover:border-gold-500 flex items-center justify-center">+</button>
-                            </div>
-                        </div>
-
-                        <!-- Civilians Summary -->
-                        <div class="flex justify-between items-center bg-darkBg/30 p-3 rounded-xl border border-cardBorder/40">
-                            <div>
-                                <span class="font-semibold block text-emerald-400"><i class="fa-solid fa-user-shield mr-1.5"></i> Civils</span>
-                                <span class="text-xs text-gray-400">Ont le mot secret principal</span>
-                            </div>
-                            <span id="count-civilian" class="font-bold text-emerald-400 text-base">0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Word Pair Options -->
-                <div class="bg-cardBg/80 border border-cardBorder rounded-2xl p-4 sm:p-5 shadow-lg space-y-4 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-sm font-bold text-gold-400 uppercase tracking-wider flex items-center gap-2 mb-3">
-                            <i class="fa-solid fa-font"></i> Choix des Mots
-                        </h3>
-
-                        <div class="space-y-3">
-                            <label class="flex items-center gap-3 p-3 bg-darkBg/60 rounded-xl border border-cardBorder cursor-pointer">
-                                <input type="radio" name="word-mode" value="auto" checked onchange="toggleWordMode()" class="text-gold-500 focus:ring-0">
-                                <div>
-                                    <span class="text-sm font-semibold block">Banque de mots automatique</span>
-                                    <span class="text-xs text-gray-400">Sélection aléatoire dans la base (+200 paires)</span>
-                                </div>
-                            </label>
-
-                            <label class="flex items-center gap-3 p-3 bg-darkBg/60 rounded-xl border border-cardBorder cursor-pointer">
-                                <input type="radio" name="word-mode" value="custom" onchange="toggleWordMode()" class="text-gold-500 focus:ring-0">
-                                <div>
-                                    <span class="text-sm font-semibold block">Mots sur-mesure</span>
-                                    <span class="text-xs text-gray-400">Entrez vos propres mots pour cette partie</span>
-                                </div>
-                            </label>
-                        </div>
-
-                        <!-- Custom Word Inputs (hidden by default) -->
-                        <div id="custom-words-inputs" class="hidden grid grid-cols-2 gap-2 mt-3">
-                            <input type="text" id="custom-word-civ" placeholder="Mot Civil" class="p-2.5 bg-darkBg border border-cardBorder rounded-xl text-xs focus:border-gold-500">
-                            <input type="text" id="custom-word-und" placeholder="Mot Undercover" class="p-2.5 bg-darkBg border border-cardBorder rounded-xl text-xs focus:border-gold-500">
-                        </div>
-                    </div>
-
-                    <button onclick="startGame()" class="w-full py-3.5 bg-gradient-to-r from-gold-400 via-gold-500 to-amber-600 hover:from-gold-300 hover:to-gold-500 text-black font-extrabold rounded-xl shadow-lg shadow-gold-500/20 text-base uppercase tracking-wider transition-all transform active:scale-98 flex items-center justify-center gap-2 mt-4">
-                        <i class="fa-solid fa-play"></i> Lancer la Partie
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= CARD DISTRIBUTION PHASE ================= -->
-        <section id="screen-distribution" class="hidden space-y-6 text-center transition-all duration-300">
-            <div>
-                <span class="text-xs text-gold-400 font-semibold tracking-widest uppercase">Étape 1 / 2 : Passation du téléphone</span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-100 mt-1">Découverte des Rôles</h2>
-                <p class="text-sm text-gray-400">Passez l'appareil à <span id="dist-player-name" class="text-gold-400 font-bold">--</span></p>
-            </div>
-
-            <!-- Flip Card Container -->
-            <div class="max-w-xs mx-auto perspective-1000 my-8">
-                <div id="secret-card" onclick="toggleCardFlip()" class="relative w-full h-80 cursor-pointer transform-style-3d transition-transform duration-700 rounded-2xl shadow-2xl">
-                    
-                    <!-- Card Front (Hidden State) -->
-                    <div class="absolute inset-0 backface-hidden bg-gradient-to-br from-cardBg via-darkBg to-cardBg border-2 border-gold-500/40 rounded-2xl flex flex-col items-center justify-center p-6 space-y-4 shadow-xl gold-glow">
-                        <div class="w-16 h-16 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 text-2xl">
-                            <i class="fa-solid fa-fingerprint"></i>
-                        </div>
-                        <div class="space-y-1">
-                            <h3 id="card-front-player" class="text-xl font-bold text-white">Nom du Joueur</h3>
-                            <p class="text-xs text-gray-400">Touchez pour révéler votre carte secrète</p>
-                        </div>
-                        <div class="pt-4 text-[11px] text-amber-400/60 uppercase tracking-widest flex items-center gap-1">
-                            <i class="fa-solid fa-eye-slash"></i> Gardez-le secret !
-                        </div>
-                    </div>
-
-                    <!-- Card Back (Revealed State) -->
-                    <div class="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-gray-900 via-cardBg to-gray-900 border-2 border-gold-400 rounded-2xl flex flex-col items-center justify-between p-6 shadow-2xl">
-                        <div class="w-full flex justify-between items-center text-xs text-gray-400">
-                            <span>Rôle attribué</span>
-                            <i class="fa-solid fa-user-secret text-gold-400"></i>
-                        </div>
-
-                        <div class="space-y-3 my-auto">
-                            <div id="card-role-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                                Civile
-                            </div>
-                            <div class="space-y-1">
-                                <p class="text-xs text-gray-400">Votre mot secret :</p>
-                                <h2 id="card-secret-word" class="text-3xl font-extrabold text-amber-300 tracking-wide">
-                                    CHOCOLAT
-                                </h2>
-                            </div>
-                            <p id="card-role-desc" class="text-xs text-gray-400 max-w-[200px] mx-auto italic">
-                                Ne faites aucun faux pas, trouvez l'Undercover.
-                            </p>
-                        </div>
-
-                        <button onclick="confirmCardRead(event)" class="w-full py-2.5 bg-gold-500 text-black font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-gold-400 transition-colors">
-                            J'ai retenu mon mot
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Progress Bar -->
-            <div class="max-w-xs mx-auto space-y-2">
-                <div class="w-full bg-cardBg rounded-full h-2 overflow-hidden border border-cardBorder">
-                    <div id="dist-progress-bar" class="bg-gradient-to-r from-gold-500 to-amber-400 h-full w-0 transition-all duration-300"></div>
-                </div>
-                <div class="text-xs text-gray-400 flex justify-between">
-                    <span>Joueurs : <span id="dist-current-index">1</span>/<span id="dist-total-count">4</span></span>
-                    <span id="dist-status-text">Prêt à transmettre</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= ACTIVE GAME DASHBOARD ================= -->
-        <section id="screen-dashboard" class="hidden space-y-6 transition-all duration-300">
-            
-            <!-- Dashboard Header / Status Bar -->
-            <div class="bg-cardBg/90 border border-cardBorder rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-lg gold-glow">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 text-xl font-bold">
-                        <span id="dash-round-number">1</span>
-                    </div>
-                    <div>
-                        <span class="text-xs text-gold-400 uppercase tracking-wider font-semibold">Manche En Cours</span>
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            Tour d'Indice <i class="fa-solid fa-comments text-amber-400 text-xs"></i>
-                        </h2>
-                    </div>
-                </div>
-
-                <!-- Turn Tracker Banner -->
-                <div class="w-full sm:w-auto bg-darkBg/80 px-4 py-2.5 rounded-xl border border-cardBorder flex items-center gap-3">
-                    <span class="relative flex h-3 w-3">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-3 w-3 bg-gold-500"></span>
-                    </span>
-                    <div class="text-left">
-                        <div class="text-[10px] text-gray-400 uppercase tracking-widest">C'est le tour de</div>
-                        <div id="dash-current-turn-player" class="text-sm font-extrabold text-amber-300">Alex</div>
-                    </div>
-                    <button onclick="nextTurn()" class="ml-auto sm:ml-2 px-3 py-1 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 rounded-lg text-xs font-semibold border border-gold-500/30 transition-colors">
-                        Suivant <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Active Players & Voting Grid -->
-            <div class="space-y-3">
-                <div class="flex justify-between items-center px-1">
-                    <h3 class="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-users"></i> Joueurs en jeu
-                    </h3>
-                    <span class="text-xs text-gray-400">Cliquez sur un joueur pour lancer un vote d'élimination</span>
-                </div>
-
-                <div id="dash-players-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                    <!-- Dynamic Active Player Cards -->
-                </div>
-            </div>
-
-            <!-- Eliminated Players Bar -->
-            <div id="dash-eliminated-section" class="bg-cardBg/40 border border-cardBorder/50 rounded-2xl p-4 space-y-2">
-                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-skull"></i> Joueurs Éliminés (<span id="dash-elim-count">0</span>)
-                </h4>
-                <div id="dash-eliminated-list" class="flex flex-wrap gap-2">
-                    <span class="text-xs text-gray-500 italic">Aucun joueur éliminé pour l'instant.</span>
-                </div>
-            </div>
-
-            <!-- Quick Game Controls -->
-            <div class="flex justify-between gap-3 pt-2">
-                <button onclick="promptEndGame()" class="px-4 py-2 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 rounded-xl text-xs font-semibold transition-colors">
-                    <i class="fa-solid fa-flag text-xs mr-1"></i> Abandonner Partie
-                </button>
-                <button onclick="revealWordPairModal()" class="px-4 py-2 bg-cardBg border border-cardBorder text-gray-300 hover:text-gold-400 rounded-xl text-xs font-semibold transition-colors">
-                    <i class="fa-solid fa-eye text-xs mr-1"></i> Voir les Mots Secrets
-                </button>
-            </div>
-        </section>
-
-        <!-- ================= END GAME / REVEAL SCREEN ================= -->
-        <section id="screen-gameover" class="hidden space-y-6 text-center transition-all duration-300">
-            <div class="space-y-2">
-                <div id="gameover-icon-box" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl shadow-xl">
-                    <i class="fa-solid fa-trophy"></i>
-                </div>
-                <h2 id="gameover-title" class="text-3xl font-extrabold text-white">Victoire des Civils !</h2>
-                <p id="gameover-subtitle" class="text-sm text-gray-400">Tous les Undercovers et Mr. White ont été démasqués.</p>
-            </div>
-
-            <!-- Word Pair Reveal Box -->
-            <div class="bg-cardBg border border-cardBorder rounded-2xl p-5 shadow-xl gold-glow space-y-3 max-w-md mx-auto">
-                <h3 class="text-xs font-bold text-gold-400 uppercase tracking-widest">Les mots de la partie</h3>
-                <div class="grid grid-cols-2 gap-3 text-left">
-                    <div class="bg-darkBg p-3 rounded-xl border border-emerald-500/20">
-                        <span class="text-[10px] text-emerald-400 uppercase font-semibold block">Mot Civil</span>
-                        <span id="gameover-word-civ" class="text-lg font-bold text-white">--</span>
-                    </div>
-                    <div class="bg-darkBg p-3 rounded-xl border border-red-500/20">
-                        <span class="text-[10px] text-red-400 uppercase font-semibold block">Mot Undercover</span>
-                        <span id="gameover-word-und" class="text-lg font-bold text-white">--</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Player Roles Recap Table -->
-            <div class="bg-cardBg/80 border border-cardBorder rounded-2xl p-4 shadow-lg text-left max-w-lg mx-auto space-y-3">
-                <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider">Récapitulatif des Joueurs</h3>
-                <div id="gameover-recap-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-                    <!-- Dynamic Recap Cards -->
-                </div>
-            </div>
-
-            <div class="flex justify-center gap-3 pt-2">
-                <button onclick="restartSamePlayers()" class="px-6 py-3 bg-gradient-to-r from-gold-500 to-amber-600 hover:from-gold-400 hover:to-gold-500 text-black font-extrabold rounded-xl text-sm uppercase tracking-wider shadow-lg shadow-gold-500/20 transition-all active:scale-95">
-                    <i class="fa-solid fa-rotate-right mr-1"></i> Rejouer (Mêmes Joueurs)
-                </button>
-                <button onclick="returnToSetup()" class="px-5 py-3 bg-cardBg border border-cardBorder text-gray-300 hover:text-white rounded-xl text-sm font-semibold transition-colors">
-                    <i class="fa-solid fa-gear mr-1"></i> Menu Configuration
-                </button>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Modal: Mr. White Word Guessing -->
-    <div id="modal-mrwhite" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-cardBg border border-cardBorder rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 text-center">
-            <div class="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto text-xl">
-                <i class="fa-solid fa-user-ghost"></i>
-            </div>
-            <div>
-                <h3 class="text-xl font-extrabold text-white">Mr. White a été éliminé !</h3>
-                <p class="text-xs text-gray-400 mt-1">Dernière chance : Mr. White peut-il deviner le mot exact des Civils ?</p>
-            </div>
-
-            <input type="text" id="input-mrwhite-guess" placeholder="Proposer un mot..." class="w-full p-3 bg-darkBg border border-cardBorder rounded-xl text-center font-bold text-amber-300 focus:outline-none focus:border-gold-500">
-
-            <div class="grid grid-cols-2 gap-3 pt-2">
-                <button onclick="checkMrWhiteGuess(false)" class="py-2.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 rounded-xl text-xs font-semibold">
-                    Raté (Pas trouvé)
-                </button>
-                <button onclick="checkMrWhiteGuess(true)" class="py-2.5 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-xl text-xs uppercase tracking-wider">
-                    Mot Exact ! (Victoire)
-                </button>
-            </div>
-        </div>
+<!-- DISTRIBUTION -->
+<section id="s-dist" class="hidden text-center space-y-5">
+ <div><span class="text-xs text-gold-400 font-semibold tracking-widest uppercase">Passation du téléphone</span>
+ <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">Découverte des rôles</h2>
+ <p class="text-sm text-gray-400">Passez l'appareil à <span id="dist-name" class="text-gold-400 font-bold"></span></p></div>
+ <div class="max-w-xs mx-auto persp my-6">
+  <div id="card" onclick="flipCard()" class="relative w-full h-80 cursor-pointer preserve transition-transform duration-700 rounded-2xl shadow-2xl">
+   <div class="absolute inset-0 bf bg-gradient-to-br from-cardBg via-darkBg to-cardBg border-2 border-gold-500/40 rounded-2xl flex flex-col items-center justify-center p-6 gap-3 glow">
+    <div class="w-16 h-16 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 text-2xl"><i class="fa-solid fa-fingerprint"></i></div>
+    <h3 id="card-front" class="text-xl font-bold"></h3>
+    <p class="text-xs text-gray-400">Touchez pour révéler votre carte</p>
+    <p class="text-[11px] text-amber-400/60 uppercase tracking-widest"><i class="fa-solid fa-eye-slash"></i> Gardez-le secret !</p>
+   </div>
+   <div class="absolute inset-0 bf ry bg-gradient-to-br from-gray-900 via-cardBg to-gray-900 border-2 border-gold-400 rounded-2xl flex flex-col items-center justify-between p-6 shadow-2xl">
+    <div class="w-full flex justify-between text-xs text-gray-400"><span>Rôle attribué</span><i class="fa-solid fa-user-secret text-gold-400"></i></div>
+    <div class="space-y-3 my-auto">
+     <div id="card-badge"></div>
+     <p class="text-xs text-gray-400">Votre mot secret :</p>
+     <h2 id="card-word" class="text-3xl font-extrabold text-amber-300 break-words"></h2>
+     <p id="card-desc" class="text-xs text-gray-400 max-w-[210px] mx-auto italic"></p>
     </div>
-
-    <!-- Modal: Custom Words Database Manager -->
-    <div id="modal-custom-words" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-cardBg border border-cardBorder rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b border-cardBorder pb-3">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-book-bookmark text-gold-400"></i> Banque de Paires de Mots
-                </h3>
-                <button onclick="closeModal('modal-custom-words')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <div class="space-y-3">
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" id="db-word-1" placeholder="Mot Civil (ex: Soleil)" class="p-2.5 bg-darkBg border border-cardBorder rounded-xl text-xs">
-                    <input type="text" id="db-word-2" placeholder="Mot Undercover (ex: Lune)" class="p-2.5 bg-darkBg border border-cardBorder rounded-xl text-xs">
-                </div>
-                <button onclick="addCustomWordPair()" class="w-full py-2 bg-gold-500/20 hover:bg-gold-500/30 border border-gold-500/40 text-gold-300 font-semibold rounded-xl text-xs">
-                    + Ajouter à la banque personnelle
-                </button>
-            </div>
-
-            <div class="space-y-2">
-                <span class="text-xs text-gray-400 font-semibold">Paires de mots disponibles (<span id="db-total-pairs">0</span>)</span>
-                <div id="db-pairs-list" class="max-h-48 overflow-y-auto space-y-1.5 pr-1">
-                    <!-- Dynamic Pairs List -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Statistics & History -->
-    <div id="modal-stats" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-cardBg border border-cardBorder rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b border-cardBorder pb-3">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-chart-pie text-gold-400"></i> Statistiques du Groupe
-                </h3>
-                <button onclick="closeModal('modal-stats')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <div class="grid grid-cols-3 gap-2 text-center">
-                <div class="bg-darkBg p-3 rounded-xl border border-cardBorder">
-                    <span class="text-[10px] text-gray-400 uppercase block">Parties</span>
-                    <span id="stat-total-games" class="text-xl font-extrabold text-white">0</span>
-                </div>
-                <div class="bg-darkBg p-3 rounded-xl border border-cardBorder">
-                    <span class="text-[10px] text-emerald-400 uppercase block">Civils</span>
-                    <span id="stat-civ-wins" class="text-xl font-extrabold text-emerald-400">0</span>
-                </div>
-                <div class="bg-darkBg p-3 rounded-xl border border-cardBorder">
-                    <span class="text-[10px] text-red-400 uppercase block">Undercover</span>
-                    <span id="stat-und-wins" class="text-xl font-extrabold text-red-400">0</span>
-                </div>
-            </div>
-
-            <div class="space-y-2">
-                <span class="text-xs text-gray-400 font-semibold">Classement Joueurs</span>
-                <div id="stats-leaderboard" class="max-h-48 overflow-y-auto space-y-1.5 pr-1">
-                    <!-- Dynamic Leaderboard -->
-                </div>
-            </div>
-
-            <button onclick="resetStats()" class="w-full py-2 text-red-400 hover:text-red-300 text-xs font-medium">
-                Réinitialiser les statistiques
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal: View Secret Words (Host Preview) -->
-    <div id="modal-secret-preview" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-cardBg border border-cardBorder rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4 text-center">
-            <h3 class="text-base font-bold text-white">Aperçu discret des Mots</h3>
-            <div class="space-y-2 text-left bg-darkBg p-3 rounded-xl border border-cardBorder">
-                <div>
-                    <span class="text-[10px] text-emerald-400 uppercase font-semibold">Mot Civil</span>
-                    <div id="preview-word-civ" class="text-sm font-bold text-white">--</div>
-                </div>
-                <div class="pt-2 border-t border-cardBorder">
-                    <span class="text-[10px] text-red-400 uppercase font-semibold">Mot Undercover</span>
-                    <div id="preview-word-und" class="text-sm font-bold text-white">--</div>
-                </div>
-            </div>
-            <button onclick="closeModal('modal-secret-preview')" class="w-full py-2 bg-gold-500 text-black font-bold rounded-xl text-xs">
-                Fermer
-            </button>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="border-t border-cardBorder/40 py-3 bg-darkBg/80 text-center text-xs text-gray-500">
-        Undercover Board & Dashboard &bull; Design Moderne Gold & Dark Mode
-    </footer>
-
-    <!-- JavaScript Logic Application -->
-    <script>
-        // Default Word Database Pairs
-        const defaultWordPairs = [
-            { civ: "Café", und: "Thé" },
-            { civ: "Soleil", und: "Lune" },
-            { civ: "Plage", und: "Piscine" },
-            { civ: "Chien", und: "Chat" },
-            { civ: "Avion", und: "Hélicoptère" },
-            { civ: "Burger", und: "Pizza" },
-            { civ: "Guitare", und: "Violon" },
-            { civ: "Cinéma", und: "Théâtre" },
-            { civ: "Livre", und: "Journal" },
-            { civ: "Miroir", und: "Fenêtre" },
-            { civ: "Crayon", und: "Stylo" },
-            { civ: "Chocolat", und: "Bonbon" },
-            { civ: "Montagne", und: "Colline" },
-            { civ: "Rivière", und: "Lac" },
-            { civ: "Voiture", und: "Moto" },
-            { civ: "Smartphone", und: "Tablette" },
-            { civ: "Chemise", und: "T-shirt" },
-            { civ: "Bière", und: "Vin" }
-        ];
-
-        // State Management
-        let customWordPairs = JSON.parse(localStorage.getItem('uc_custom_words') || '[]');
-        let stats = JSON.parse(localStorage.getItem('uc_stats') || '{"games":0, "civWins":0, "undWins":0, "players":{}}');
-
-        let players = ["Alex", "Sophie", "Thomas", "Emma"]; // Default players
-        let roleConfig = { undercover: 1, mrwhite: 1 };
-        let currentWordPair = { civ: "", und: "" };
-        
-        // Active Game Session State
-        let gameState = {
-            activePlayers: [], // { name, role: 'CIV'|'UND'|'MRW', word, alive: true, id }
-            distributionIndex: 0,
-            cardFlipped: false,
-            currentTurnIndex: 0,
-            roundNumber: 1,
-            pendingMrWhiteElimination: null
-        };
-
-        let soundEnabled = true;
-
-        // Sound Effects generator using Web Audio API
-        function playSound(type) {
-            if (!soundEnabled) return;
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                if (type === 'flip') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(300, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.1);
-                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.1);
-                } else if (type === 'click') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(400, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.05);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.05);
-                } else if (type === 'win') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(400, ctx.currentTime);
-                    osc.frequency.setValueAtTime(600, ctx.currentTime + 0.15);
-                    osc.frequency.setValueAtTime(800, ctx.currentTime + 0.3);
-                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.5);
-                }
-            } catch(e) {}
-        }
-
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            const btn = document.getElementById('btn-sound-toggle');
-            btn.innerHTML = soundEnabled ? '<i class="fa-solid fa-volume-high text-sm"></i>' : '<i class="fa-solid fa-volume-xmark text-sm"></i>';
-        }
-
-        // Initialize UI
-        document.addEventListener("DOMContentLoaded", () => {
-            renderPlayersList();
-            updateRoleCounts();
-            renderCustomWordsList();
-        });
-
-        // Player Management
-        function addPlayer() {
-            const input = document.getElementById('input-player-name');
-            const name = input.value.trim();
-            if (name && !players.includes(name)) {
-                players.push(name);
-                input.value = '';
-                renderPlayersList();
-                updateRoleCounts();
-                playSound('click');
-            }
-        }
-
-        function removePlayer(name) {
-            players = players.filter(p => p !== name);
-            renderPlayersList();
-            updateRoleCounts();
-            playSound('click');
-        }
-
-        function renderPlayersList() {
-            const container = document.getElementById('players-container');
-            document.getElementById('player-count').textContent = players.length;
-
-            container.innerHTML = players.map(p => `
-                <div class="flex items-center gap-2 px-3 py-1.5 bg-darkBg border border-cardBorder rounded-xl text-xs font-semibold text-gray-200">
-                    <span>${escapeHtml(p)}</span>
-                    <button onclick="removePlayer('${escapeHtml(p)}')" class="text-gray-500 hover:text-red-400 transition-colors">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function adjustRole(type, delta) {
-            if (type === 'undercover') {
-                roleConfig.undercover = Math.max(1, roleConfig.undercover + delta);
-            } else if (type === 'mrwhite') {
-                roleConfig.mrwhite = Math.max(0, roleConfig.mrwhite + delta);
-            }
-            updateRoleCounts();
-            playSound('click');
-        }
-
-        function updateRoleCounts() {
-            const total = players.length;
-            const civCount = Math.max(0, total - roleConfig.undercover - roleConfig.mrwhite);
-
-            document.getElementById('count-undercover').textContent = roleConfig.undercover;
-            document.getElementById('count-mrwhite').textContent = roleConfig.mrwhite;
-            document.getElementById('count-civilian').textContent = civCount;
-        }
-
-        function toggleWordMode() {
-            const mode = document.querySelector('input[name="word-mode"]:checked').value;
-            const customDiv = document.getElementById('custom-words-inputs');
-            if (mode === 'custom') {
-                customDiv.classList.remove('hidden');
-            } else {
-                customDiv.classList.add('hidden');
-            }
-        }
-
-        // Start Game & Role Assignment
-        function startGame() {
-            if (players.length < 3) {
-                alert("Veuillez ajouter au moins 3 joueurs pour démarrer la partie !");
-                return;
-            }
-
-            const totalSpecial = roleConfig.undercover + roleConfig.mrwhite;
-            if (totalSpecial >= players.length) {
-                alert("Trop de rôles spéciaux par rapport au nombre total de joueurs !");
-                return;
-            }
-
-            // Word selection
-            const wordMode = document.querySelector('input[name="word-mode"]:checked').value;
-            if (wordMode === 'custom') {
-                const wCiv = document.getElementById('custom-word-civ').value.trim();
-                const wUnd = document.getElementById('custom-word-und').value.trim();
-                if (!wCiv || !wUnd) {
-                    alert("Veuillez renseigner les deux mots secrets sur-mesure.");
-                    return;
-                }
-                currentWordPair = { civ: wCiv, und: wUnd };
-            } else {
-                const allPairs = [...defaultWordPairs, ...customWordPairs];
-                currentWordPair = allPairs[Math.floor(Math.random() * allPairs.length)];
-            }
-
-            // Assign Roles
-            let rolesPool = [];
-            for (let i = 0; i < roleConfig.undercover; i++) rolesPool.push('UND');
-            for (let i = 0; i < roleConfig.mrwhite; i++) rolesPool.push('MRW');
-            while (rolesPool.length < players.length) rolesPool.push('CIV');
-
-            // Shuffle roles
-            rolesPool = rolesPool.sort(() => Math.random() - 0.5);
-
-            // Build active players list
-            gameState.activePlayers = players.map((name, index) => {
-                const role = rolesPool[index];
-                let word = "";
-                if (role === 'CIV') word = currentWordPair.civ;
-                else if (role === 'UND') word = currentWordPair.und;
-                else if (role === 'MRW') word = "?? [Mr. White]";
-
-                return {
-                    id: index,
-                    name: name,
-                    role: role,
-                    word: word,
-                    alive: true
-                };
-            });
-
-            // Randomize starting player order
-            gameState.activePlayers = gameState.activePlayers.sort(() => Math.random() - 0.5);
-
-            gameState.distributionIndex = 0;
-            gameState.cardFlipped = false;
-            gameState.currentTurnIndex = 0;
-            gameState.roundNumber = 1;
-
-            switchScreen('screen-distribution');
-            setupCardDistributionStep();
-        }
-
-        // Card Reveal Logic
-        function setupCardDistributionStep() {
-            const player = gameState.activePlayers[gameState.distributionIndex];
-            const total = gameState.activePlayers.length;
-
-            document.getElementById('dist-player-name').textContent = player.name;
-            document.getElementById('dist-current-index').textContent = gameState.distributionIndex + 1;
-            document.getElementById('dist-total-count').textContent = total;
-
-            const progress = ((gameState.distributionIndex) / total) * 100;
-            document.getElementById('dist-progress-bar').style.width = `${progress}%`;
-
-            // Reset Card Flip
-            const card = document.getElementById('secret-card');
-            card.classList.remove('rotate-y-180');
-            gameState.cardFlipped = false;
-
-            // Fill card back details
-            document.getElementById('card-front-player').textContent = player.name;
-            document.getElementById('card-secret-word').textContent = player.word;
-
-            const badge = document.getElementById('card-role-badge');
-            const desc = document.getElementById('card-role-desc');
-
-            if (player.role === 'CIV') {
-                badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-                badge.textContent = "Civil";
-                desc.textContent = "Décrivez votre mot sans le donner clairement aux Undercovers.";
-            } else if (player.role === 'UND') {
-                badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-500/20 text-red-400 border border-red-500/30";
-                badge.textContent = "Undercover";
-                desc.textContent = "Votre mot est légèrement différent. Fondez-vous dans la masse !";
-            } else {
-                badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
-                badge.textContent = "Mr. White";
-                desc.textContent = "Vous n'avez AUCUN mot. Écoutez les autres et bluffez !";
-            }
-        }
-
-        function toggleCardFlip() {
-            const card = document.getElementById('secret-card');
-            gameState.cardFlipped = !gameState.cardFlipped;
-            if (gameState.cardFlipped) {
-                card.classList.add('rotate-y-180');
-                playSound('flip');
-            } else {
-                card.classList.remove('rotate-y-180');
-            }
-        }
-
-        function confirmCardRead(event) {
-            event.stopPropagation(); // prevent flipping back immediately
-            gameState.distributionIndex++;
-
-            if (gameState.distributionIndex < gameState.activePlayers.length) {
-                setupCardDistributionStep();
-            } else {
-                // All cards distributed, go to active game dashboard
-                startActiveDashboard();
-            }
-        }
-
-        // Active Dashboard Logic
-        function startActiveDashboard() {
-            switchScreen('screen-dashboard');
-            renderDashboard();
-        }
-
-        function renderDashboard() {
-            document.getElementById('dash-round-number').textContent = gameState.roundNumber;
-
-            // Active player turn
-            const alivePlayers = gameState.activePlayers.filter(p => p.alive);
-            if (alivePlayers.length > 0) {
-                const currentTurnPlayer = alivePlayers[gameState.currentTurnIndex % alivePlayers.length];
-                document.getElementById('dash-current-turn-player').textContent = currentTurnPlayer.name;
-            }
-
-            // Render Active Players Grid
-            const grid = document.getElementById('dash-players-grid');
-            grid.innerHTML = gameState.activePlayers.map(p => {
-                if (!p.alive) return '';
-                const isCurrentTurn = alivePlayers[gameState.currentTurnIndex % alivePlayers.length]?.id === p.id;
-
-                return `
-                    <div class="bg-cardBg border ${isCurrentTurn ? 'border-gold-500 gold-border-glow' : 'border-cardBorder'} rounded-2xl p-4 flex flex-col justify-between space-y-3 relative overflow-hidden transition-all">
-                        ${isCurrentTurn ? '<span class="absolute top-0 right-0 bg-gold-500 text-black font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-bl-lg tracking-wider">Indice</span>' : ''}
-                        
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-darkBg border border-cardBorder flex items-center justify-center font-bold text-gray-300">
-                                ${p.name.charAt(0).toUpperCase()}
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-white text-base leading-tight">${escapeHtml(p.name)}</h4>
-                                <span class="text-[11px] text-gray-400">En vie</span>
-                            </div>
-                        </div>
-
-                        <button onclick="voteEliminatePlayer(${p.id})" class="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-vote-yea"></i> Voter pour éliminer
-                        </button>
-                    </div>
-                `;
-            }).join('');
-
-            // Render Eliminated Players List
-            const elimContainer = document.getElementById('dash-eliminated-list');
-            const deadPlayers = gameState.activePlayers.filter(p => !p.alive);
-            document.getElementById('dash-elim-count').textContent = deadPlayers.length;
-
-            if (deadPlayers.length === 0) {
-                elimContainer.innerHTML = `<span class="text-xs text-gray-500 italic">Aucun joueur éliminé pour l'instant.</span>`;
-            } else {
-                elimContainer.innerHTML = deadPlayers.map(p => `
-                    <div class="px-3 py-1.5 bg-darkBg/80 border border-cardBorder rounded-xl text-xs flex items-center gap-2 text-gray-400">
-                        <span class="line-through">${escapeHtml(p.name)}</span>
-                        <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${getRoleBadgeClass(p.role)}">${getRoleLabel(p.role)}</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function nextTurn() {
-            const alivePlayers = gameState.activePlayers.filter(p => p.alive);
-            if (alivePlayers.length === 0) return;
-
-            gameState.currentTurnIndex = (gameState.currentTurnIndex + 1) % alivePlayers.length;
-            if (gameState.currentTurnIndex === 0) {
-                gameState.roundNumber++;
-            }
-            playSound('click');
-            renderDashboard();
-        }
-
-        function voteEliminatePlayer(id) {
-            const player = gameState.activePlayers.find(p => p.id === id);
-            if (!player) return;
-
-            if (confirm(`Confirmez-vous l'élimination par vote de ${player.name} ?`)) {
-                player.alive = false;
-
-                // Check if Mr White guess window triggers
-                if (player.role === 'MRW') {
-                    gameState.pendingMrWhiteElimination = player;
-                    document.getElementById('modal-mrwhite').classList.remove('hidden');
-                } else {
-                    checkWinConditions();
-                }
-                renderDashboard();
-            }
-        }
-
-        function checkMrWhiteGuess(guessedCorrectly) {
-            closeModal('modal-mrwhite');
-            if (guessedCorrectly) {
-                // Mr White instantly wins!
-                endGame('MRW_WIN');
-            } else {
-                checkWinConditions();
-            }
-        }
-
-        // Win Condition Checks
-        function checkWinConditions() {
-            const alive = gameState.activePlayers.filter(p => p.alive);
-            const aliveCivs = alive.filter(p => p.role === 'CIV');
-            const aliveUnds = alive.filter(p => p.role === 'UND');
-            const aliveMrws = alive.filter(p => p.role === 'MRW');
-
-            const totalEnemiesLeft = aliveUnds.length + aliveMrws.length;
-
-            // Civilians Win Condition: All Undercovers and Mr. Whites eliminated
-            if (totalEnemiesLeft === 0) {
-                endGame('CIV_WIN');
-                return;
-            }
-
-            // Undercover / Mr. White Win Condition: Enemies >= Civilians
-            if (totalEnemiesLeft >= aliveCivs.length) {
-                endGame('UND_WIN');
-                return;
-            }
-        }
-
-        // End Game Logic & Stats
-        function endGame(result) {
-            playSound('win');
-            switchScreen('screen-gameover');
-
-            const iconBox = document.getElementById('gameover-icon-box');
-            const title = document.getElementById('gameover-title');
-            const subtitle = document.getElementById('gameover-subtitle');
-
-            document.getElementById('gameover-word-civ').textContent = currentWordPair.civ;
-            document.getElementById('gameover-word-und').textContent = currentWordPair.und;
-
-            // Record Stats
-            stats.games++;
-
-            if (result === 'CIV_WIN') {
-                iconBox.className = "w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl shadow-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
-                title.textContent = "Victoire des Civils !";
-                subtitle.textContent = "Tous les Undercovers et Mr. White ont été démasqués.";
-                stats.civWins++;
-            } else if (result === 'UND_WIN') {
-                iconBox.className = "w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl shadow-xl bg-red-500/20 text-red-400 border border-red-500/40";
-                title.textContent = "Victoire des Undercovers !";
-                subtitle.textContent = "Les Undercovers ont réussi à infiltrer la cité sans se faire prendre.";
-                stats.undWins++;
-            } else if (result === 'MRW_WIN') {
-                iconBox.className = "w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl shadow-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/40";
-                title.textContent = "Victoire de Mr. White !";
-                subtitle.textContent = "Mr. White a deviné le mot secret des Civils ! Coup de maître !";
-                stats.undWins++;
-            }
-
-            // Update individual stats
-            gameState.activePlayers.forEach(p => {
-                if (!stats.players[p.name]) {
-                    stats.players[p.name] = { games: 0, wins: 0 };
-                }
-                stats.players[p.name].games++;
-                if (result === 'CIV_WIN' && p.role === 'CIV') stats.players[p.name].wins++;
-                if ((result === 'UND_WIN' || result === 'MRW_WIN') && (p.role === 'UND' || p.role === 'MRW')) stats.players[p.name].wins++;
-            });
-
-            localStorage.setItem('uc_stats', JSON.stringify(stats));
-
-            // Render Recap Table
-            const recap = document.getElementById('gameover-recap-list');
-            recap.innerHTML = gameState.activePlayers.map(p => `
-                <div class="flex justify-between items-center bg-darkBg p-3 rounded-xl border border-cardBorder text-xs">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-white">${escapeHtml(p.name)}</span>
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${getRoleBadgeClass(p.role)}">${getRoleLabel(p.role)}</span>
-                    </div>
-                    <span class="text-gray-400 italic font-mono">${p.word}</span>
-                </div>
-            `).join('');
-        }
-
-        function restartSamePlayers() {
-            startGame();
-        }
-
-        function returnToSetup() {
-            switchScreen('screen-setup');
-        }
-
-        function promptEndGame() {
-            if (confirm("Êtes-vous sûr de vouloir abandonner la partie en cours ?")) {
-                returnToSetup();
-            }
-        }
-
-        // Custom Words Modal Logic
-        function openCustomWordsModal() {
-            renderCustomWordsList();
-            document.getElementById('modal-custom-words').classList.remove('hidden');
-        }
-
-        function addCustomWordPair() {
-            const w1 = document.getElementById('db-word-1').value.trim();
-            const w2 = document.getElementById('db-word-2').value.trim();
-
-            if (w1 && w2) {
-                customWordPairs.push({ civ: w1, und: w2 });
-                localStorage.setItem('uc_custom_words', JSON.stringify(customWordPairs));
-                document.getElementById('db-word-1').value = '';
-                document.getElementById('db-word-2').value = '';
-                renderCustomWordsList();
-            }
-        }
-
-        function removeCustomPair(index) {
-            customWordPairs.splice(index, 1);
-            localStorage.setItem('uc_custom_words', JSON.stringify(customWordPairs));
-            renderCustomWordsList();
-        }
-
-        function renderCustomWordsList() {
-            const container = document.getElementById('db-pairs-list');
-            const allPairs = [...defaultWordPairs, ...customWordPairs];
-            document.getElementById('db-total-pairs').textContent = allPairs.length;
-
-            container.innerHTML = allPairs.map((pair, idx) => `
-                <div class="flex justify-between items-center bg-darkBg px-3 py-2 rounded-xl text-xs border border-cardBorder">
-                    <span class="text-gray-200">${pair.civ} <span class="text-gray-500">/</span> ${pair.und}</span>
-                    ${idx >= defaultWordPairs.length ? `
-                        <button onclick="removeCustomPair(${idx - defaultWordPairs.length})" class="text-gray-500 hover:text-red-400">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    ` : '<span class="text-[10px] text-gray-500">Par défaut</span>'}
-                </div>
-            `).join('');
-        }
-
-        // Stats Modal
-        function openStatsModal() {
-            document.getElementById('stat-total-games').textContent = stats.games;
-            document.getElementById('stat-civ-wins').textContent = stats.civWins;
-            document.getElementById('stat-und-wins').textContent = stats.undWins;
-
-            const leaderboard = document.getElementById('stats-leaderboard');
-            const playerArray = Object.keys(stats.players).map(k => ({
-                name: k,
-                ...stats.players[k]
-            })).sort((a,b) => b.wins - a.wins);
-
-            if (playerArray.length === 0) {
-                leaderboard.innerHTML = `<span class="text-xs text-gray-500 italic">Aucune donnée disponible.</span>`;
-            } else {
-                leaderboard.innerHTML = playerArray.map(p => `
-                    <div class="flex justify-between items-center bg-darkBg p-2.5 rounded-xl border border-cardBorder text-xs">
-                        <span class="font-bold text-gray-200">${escapeHtml(p.name)}</span>
-                        <span class="text-amber-400 font-extrabold">${p.wins} victoires <span class="text-gray-500 font-normal">/ ${p.games} parties</span></span>
-                    </div>
-                `).join('');
-            }
-
-            document.getElementById('modal-stats').classList.remove('hidden');
-        }
-
-        function resetStats() {
-            if (confirm("Réinitialiser les statistiques de jeu ?")) {
-                stats = { games: 0, civWins: 0, undWins: 0, players: {} };
-                localStorage.setItem('uc_stats', JSON.stringify(stats));
-                openStatsModal();
-            }
-        }
-
-        function revealWordPairModal() {
-            document.getElementById('preview-word-civ').textContent = currentWordPair.civ;
-            document.getElementById('preview-word-und').textContent = currentWordPair.und;
-            document.getElementById('modal-secret-preview').classList.remove('hidden');
-        }
-
-        // Helpers
-        function switchScreen(screenId) {
-            ['screen-setup', 'screen-distribution', 'screen-dashboard', 'screen-gameover'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(screenId).classList.remove('hidden');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-
-        function getRoleLabel(role) {
-            if (role === 'CIV') return 'Civil';
-            if (role === 'UND') return 'Undercover';
-            if (role === 'MRW') return 'Mr. White';
-            return '';
-        }
-
-        function getRoleBadgeClass(role) {
-            if (role === 'CIV') return 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
-            if (role === 'UND') return 'bg-red-500/20 text-red-400 border border-red-500/30';
-            if (role === 'MRW') return 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30';
-            return '';
-        }
-
-        function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-    </script>
+    <button onclick="confirmCard(event)" class="btn-gold w-full">J'ai retenu mon mot</button>
+   </div>
+  </div>
+ </div>
+ <div class="max-w-xs mx-auto space-y-2">
+  <div class="w-full bg-cardBg rounded-full h-2 overflow-hidden border border-cardBorder"><div id="dist-bar" class="bg-gradient-to-r from-gold-500 to-amber-400 h-full w-0 transition-all"></div></div>
+  <div class="text-xs text-gray-400">Joueur <span id="dist-i">1</span> / <span id="dist-n">1</span></div>
+ </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="s-dash" class="hidden space-y-4">
+ <div class="card glow flex flex-col sm:flex-row justify-between items-center gap-3">
+  <div class="flex items-center gap-3">
+   <div class="w-12 h-12 rounded-xl bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 text-xl font-bold" id="d-round">1</div>
+   <div><span class="text-xs text-gold-400 uppercase tracking-wider font-semibold">Manche en cours</span>
+   <h2 class="text-lg font-bold">Indices puis vote</h2></div>
+  </div>
+  <div class="bg-darkBg/80 px-4 py-2 rounded-xl border border-cardBorder text-center sm:text-left">
+   <div class="text-[10px] text-gray-400 uppercase tracking-widest">C'est le tour de</div>
+   <div id="d-turn" class="text-base font-extrabold text-amber-300"></div>
+   <div id="d-timer" class="text-sm font-extrabold"></div>
+  </div>
+ </div>
+
+ <div id="d-clue-box" class="card flex gap-2">
+  <input id="in-clue" maxlength="60" placeholder="Indice donné à l'oral (optionnel)" class="inp" onkeydown="if(event.key==='Enter')addClue()">
+  <button onclick="addClue()" class="btn-gold whitespace-nowrap">Valider <i class="fa-solid fa-chevron-right"></i></button>
+ </div>
+
+ <div class="space-y-2">
+  <div class="flex justify-between items-center px-1">
+   <h3 class="lbl"><i class="fa-solid fa-users"></i> Joueurs en jeu &amp; votes</h3>
+   <button onclick="validateVote()" class="btn-red"><i class="fa-solid fa-gavel mr-1"></i> Valider le vote</button>
+  </div>
+  <div id="d-players" class="grid sm:grid-cols-2 gap-3"></div>
+ </div>
+
+ <div class="grid md:grid-cols-2 gap-3">
+  <div class="card space-y-2"><h4 class="lbl text-gray-400"><i class="fa-solid fa-comments"></i> Journal des indices</h4>
+   <div id="d-clues" class="max-h-36 overflow-y-auto space-y-1"></div></div>
+  <div class="card space-y-2"><h4 class="lbl text-gray-400"><i class="fa-solid fa-skull"></i> Éliminés (<span id="d-ecount">0</span>)</h4>
+   <div id="d-elim" class="flex flex-wrap gap-2"></div></div>
+ </div>
+
+ <div class="flex justify-between gap-3">
+  <button onclick="abandon()" class="btn-red"><i class="fa-solid fa-flag mr-1"></i> Abandonner</button>
+  <button onclick="openPreview()" class="btn-ghost"><i class="fa-solid fa-eye mr-1"></i> Mots secrets (hôte)</button>
+ </div>
+</section>
+
+<!-- GAME OVER -->
+<section id="s-over" class="hidden text-center space-y-5">
+ <div class="space-y-2">
+  <div id="o-icon" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl"><i class="fa-solid fa-trophy"></i></div>
+  <h2 id="o-title" class="text-3xl font-extrabold"></h2><p id="o-sub" class="text-sm text-gray-400"></p>
+ </div>
+ <div class="card max-w-md mx-auto glow space-y-3"><h3 class="lbl">Les mots de la partie</h3>
+  <div class="grid grid-cols-2 gap-3 text-left">
+   <div class="bg-darkBg p-3 rounded-xl border border-emerald-500/20"><span class="text-[10px] text-emerald-400 uppercase font-semibold block">Mot Civil</span><span id="o-civ" class="text-lg font-bold"></span></div>
+   <div class="bg-darkBg p-3 rounded-xl border border-red-500/20"><span class="text-[10px] text-red-400 uppercase font-semibold block">Mot Undercover</span><span id="o-und" class="text-lg font-bold"></span></div>
+  </div></div>
+ <div class="card max-w-lg mx-auto text-left space-y-2"><h3 class="lbl text-gray-300">Récapitulatif</h3>
+  <div id="o-recap" class="space-y-2 max-h-60 overflow-y-auto"></div></div>
+ <div class="flex justify-center gap-3 flex-wrap">
+  <button onclick="startGame()" class="btn-gold py-3 px-6"><i class="fa-solid fa-rotate-right mr-1"></i> Rejouer (mêmes joueurs)</button>
+  <button onclick="show('s-setup')" class="btn-ghost py-3"><i class="fa-solid fa-gear mr-1"></i> Configuration</button>
+ </div>
+</section>
+</main>
+
+<!-- MODALS -->
+<div id="m-mrw" class="modal hidden"><div class="card max-w-md w-full space-y-4 text-center">
+ <div class="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto text-xl"><i class="fa-solid fa-user-ghost"></i></div>
+ <div><h3 class="text-xl font-extrabold">Mr. White a été éliminé !</h3><p class="text-xs text-gray-400 mt-1">Dernière chance : peut-il deviner le mot des Civils ?</p></div>
+ <input id="in-guess" class="inp text-center font-bold text-amber-300" placeholder="Proposer un mot..." onkeydown="if(event.key==='Enter')mrwGuess()">
+ <div class="grid grid-cols-2 gap-3">
+  <button onclick="mrwGuess()" class="btn-gold">Valider</button>
+  <button onclick="mrwResolve(true)" class="btn-ghost" title="Si l'hôte accepte un synonyme">Accepté par l'hôte</button>
+  <button onclick="mrwResolve(false)" class="btn-red col-span-2">Raté / abandon</button>
+ </div></div></div>
+
+<div id="m-words" class="modal hidden"><div class="card max-w-lg w-full space-y-3">
+ <div class="flex justify-between items-center border-b border-cardBorder pb-2"><h3 class="font-bold"><i class="fa-solid fa-book-bookmark text-gold-400"></i> Mes paires de mots</h3>
+ <button onclick="closeM('m-words')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button></div>
+ <div class="grid grid-cols-2 gap-2"><input id="db-1" class="inp" placeholder="Mot Civil"><input id="db-2" class="inp" placeholder="Mot Undercover"></div>
+ <div class="flex items-center gap-2"><select id="db-d" class="inp"><option value="1">Facile</option><option value="2" selected>Moyen</option><option value="3">Difficile</option></select><span class="text-[11px] text-gray-500">Facile = mots éloignés, Difficile = mots très proches</span></div>
+ <button onclick="addPair()" class="btn-ghost w-full">+ Ajouter à ma banque</button>
+ <div class="text-xs text-gray-400" id="db-total"></div>
+ <div id="db-list" class="max-h-48 overflow-y-auto space-y-1.5"></div></div></div>
+
+<div id="m-stats" class="modal hidden"><div class="card max-w-md w-full space-y-3">
+ <div class="flex justify-between items-center border-b border-cardBorder pb-2"><h3 class="font-bold"><i class="fa-solid fa-chart-pie text-gold-400"></i> Statistiques</h3>
+ <button onclick="closeM('m-stats')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button></div>
+ <div id="st-top" class="grid grid-cols-4 gap-2 text-center"></div>
+ <div class="text-xs text-gray-400 font-semibold">Classement</div>
+ <div id="st-board" class="max-h-48 overflow-y-auto space-y-1.5"></div>
+ <button onclick="resetStats()" class="w-full text-red-400 text-xs py-1">Réinitialiser les statistiques</button></div></div>
+
+<div id="m-prev" class="modal hidden"><div class="card max-w-sm w-full space-y-3 text-center">
+ <h3 class="font-bold">Mots secrets (hôte uniquement)</h3>
+ <div id="pv" class="text-left bg-darkBg p-3 rounded-xl border border-cardBorder blur-md transition space-y-2">
+  <div><span class="text-[10px] text-emerald-400 uppercase font-semibold">Civil</span><div id="pv-civ" class="font-bold"></div></div>
+  <div class="border-t border-cardBorder pt-2"><span class="text-[10px] text-red-400 uppercase font-semibold">Undercover</span><div id="pv-und" class="font-bold"></div></div></div>
+ <div class="grid grid-cols-2 gap-2"><button onclick="peek()" class="btn-gold">Révéler 3 s</button><button onclick="closeM('m-prev')" class="btn-ghost">Fermer</button></div></div></div>
+
+<div id="toast" class="fixed bottom-16 left-1/2 -translate-x-1/2 bg-cardBg border border-gold-500/50 text-sm px-4 py-2 rounded-xl shadow-xl z-[60] hidden max-w-[90vw] text-center"></div>
+
+<footer class="border-t border-cardBorder/40 py-3 text-center text-xs text-gray-500">Undercover Dashboard &bull; Gold &amp; Dark</footer>
+
+<script>
+const RAW=`#food
+Café|Thé;Burger|Pizza~;Chocolat|Bonbon~;Bière|Vin~;Pain|Baguette;Beurre|Margarine~;Fromage|Yaourt;Lait|Crème;Miel|Confiture;Sucre|Sel~;Riz|Couscous~;Pâtes|Spaghetti;Frites|Chips;Omelette|Crêpe~;Gâteau|Tarte~;Glace|Sorbet;Mangue|Papaye~;Banane|Plantain~;Orange|Mandarine!;Citron|Lime!;Pomme|Poire!;Fraise|Framboise!;Raisin|Cerise;Pastèque|Melon!;Tomate|Poivron~;Oignon|Ail~;Carotte|Navet~;Pomme de terre|Patate douce;Arachide|Noix de cajou~;Coco|Datte;Poulet|Dinde!;Poisson|Crevette~;Mouton|Chèvre!;Saucisse|Merguez;Jus|Soda~;Eau|Limonade~;Cola|Fanta;Beignet|Donut;Sandwich|Wrap;Pain au chocolat|Croissant;Sauce|Soupe;Cacahuète|Pistache;Chewing-gum|Caramel;Biscuit|Gaufrette;Pizza|Tacos;Kebab|Shawarma;Sushi|Maki;Hot-dog|Burger
+#nature
+Soleil|Lune~;Montagne|Colline!;Rivière|Lac!;Arbre|Buisson;Fleur|Plante;Rose|Tulipe;Forêt|Jungle;Désert|Savane;Océan|Mer!;Île|Presqu'île;Volcan|Geyser!;Cascade|Fontaine!;Pluie|Orage;Neige|Grêle;Vent|Tornade;Nuage|Brouillard;Arc-en-ciel|Éclair;Étoile|Planète~;Comète|Météorite!;Terre|Mars;Hiver|Automne~;Été|Printemps
+#lieux
+Plage|Piscine~;École|Université;Hôpital|Clinique;Pharmacie|Dispensaire;Poste|Mairie~;Stade|Gymnase~;Parc|Jardin;Zoo|Aquarium;Musée|Bibliothèque~;Hôtel|Auberge!;Aéroport|Gare~;Port|Plage~;Pont|Tunnel~;Autoroute|Rue;Rond-point|Carrefour;Quartier|Village!;Ville|Capitale;Immeuble|Villa!;Château|Palais!;Paris|Londres~;New York|Los Angeles;Brésil|Argentine;Chine|Japon~;France|Belgique;Italie|Espagne;Tour Eiffel|Statue de la Liberté;Pyramide|Sphinx
+#animaux
+Chien|Chat~;Lion|Tigre!;Léopard|Guépard!;Éléphant|Rhinocéros!;Girafe|Zèbre~;Singe|Gorille!;Crocodile|Alligator!;Serpent|Lézard!;Tortue|Escargot~;Aigle|Faucon~;Perroquet|Corbeau~;Pigeon|Colombe!;Poule|Canard~;Coq|Paon;Vache|Taureau~;Cheval|Âne!;Cochon|Sanglier;Loup|Renard~;Ours|Panda~;Lapin|Hamster!;Souris|Rat!;Requin|Dauphin~;Baleine|Orque!;Pieuvre|Calmar!;Crabe|Homard!;Huître|Moule!;Grenouille|Crapaud!;Abeille|Guêpe!;Papillon|Libellule~;Fourmi|Termite!;Araignée|Scorpion~;Moustique|Mouche!;Chauve-souris|Hibou;Chameau|Dromadaire!;Hyène|Chacal!;Hippopotame|Buffle!;Kangourou|Koala~;Pingouin|Manchot;Cygne|Oie!;Mouton|Agneau!;Poussin|Œuf
+#transport
+Avion|Hélicoptère~;Voiture|Moto~;Bus|Taxi;Train|Métro;Ferry|Yacht!;Vélo|Trottinette;Camion|Camionnette!;Ambulance|Corbillard!;Fusée|Satellite~;Voilier|Paquebot!;Tracteur|Bulldozer!;Scooter|Mobylette!;Charrette|Calèche;Feu rouge|Panneau stop;Permis|Carte grise;Essence|Gasoil;Pneu|Volant;Klaxon|Sirène;Parking|Garage;Péage|Douane;Jour|Nuit~;Matin|Soir~;Semaine|Week-end~;Mois|Année;Lundi|Mardi;Vacances|Congé!;Voyage|Excursion;Tourisme|Pèlerinage!;Passeport|Visa~;Valise|Sac de voyage;Tente|Caravane;Camping|Randonnée!;Carte routière|Boussole;Frontière|Aéroport international;Hôtel de luxe|Motel;Billet d'avion|Ticket de bus;Réservation|Commande;Bagage|Colis;Cadeau|Surprise;Fête|Soirée
+#arts
+Guitare|Violon~;Cinéma|Théâtre~;Piano|Orgue!;Flûte|Trompette!;Chanson|Poème;Concert|Festival~;Rap|Hip-hop!;Jazz|Blues!;Rock|Métal;Opéra|Comédie musicale;Danse|Ballet~;Chanteur de rue|Danseur;Micro|Haut-parleur~;Scène|Estrade;Peinture|Dessin;Portrait|Paysage;Sculpture|Statue;Roman|Nouvelle!;Film|Série!
+#ecole
+Livre|Journal~;Crayon|Stylo!;Cahier|Carnet~;Règle|Équerre!;Gomme|Correcteur!;Tableau|Ardoise~;Craie|Feutre!;Examen|Concours!;Bac|Licence!;Master|Doctorat!;Devoir|Exercice~;Note|Moyenne~;Récréation|Pause~;Cantine scolaire|Internat;Cartable|Trousse~;Dictionnaire|Encyclopédie;Mathématiques|Physique!;Histoire|Géographie~;Français|Anglais;Chimie|Biologie;Grammaire|Orthographe!;Stage|Alternance
+#maison
+Miroir|Fenêtre~;Fourchette|Cuillère~;Couteau|Ciseaux~;Assiette|Bol!;Verre|Tasse!;Bouteille|Carafe!;Casserole|Poêle!;Four|Micro-ondes~;Frigo|Congélateur~;Théière|Cafetière!;Nappe|Serviette~;Marmite|Cocotte!;Mortier|Mixeur;Plateau|Tablier;Réchaud|Barbecue;Charbon|Bois;Allumette|Briquet;Cuisine|Salle à manger;Restaurant|Cantine~;Boulangerie|Pâtisserie~;Marché|Supermarché~;Table|Bureau~;Chaise|Tabouret!;Canapé|Fauteuil!;Lit|Hamac~;Oreiller|Coussin~;Couette|Couverture!;Armoire|Commode!;Lampe|Bougie;Ampoule|Néon!;Porte|Portail~;Clé|Cadenas~;Tapis|Natte;Rideau|Store;Balai|Serpillière~;Seau|Bassine;Savon|Shampoing~;Brosse à dents|Dentifrice;Serviette de bain|Peignoir;Douche|Baignoire~;Toilettes|Lavabo;Marteau|Tournevis~;Clou|Vis~;Scie|Hache;Perceuse|Visseuse;Échelle|Escabeau;Corde|Chaîne~;Colle|Scotch~;Peinture murale|Vernis;Pinceau|Rouleau;Ciment|Béton~;Brique|Parpaing;Sable|Gravier;Fer|Acier~;Or|Argent~;Diamant|Cristal;Plastique|Caoutchouc;Verre|Bouteille en verre!;Bois|Bambou;Papier|Carton~;Pierre|Rocher~
+#tech
+Smartphone|Tablette!;Ordinateur|Tablette~;Clavier|Souris;Écran|Télévision;Radio|Podcast~;Casque|Écouteurs!;Chargeur|Batterie;WhatsApp|Telegram~;Facebook|Instagram!;TikTok|YouTube~;Snapchat|Twitter!;Google|Bing!;Netflix|Disney+~;Spotify|Deezer!;Wi-Fi|Bluetooth!;Email|SMS;Appel|Message vocal;Selfie|Photo~;Caméra|Appareil photo;Imprimante|Scanner~
+#mode
+Chemise|T-shirt!;Pantalon|Short~;Jean|Jogging!;Robe|Jupe~;Costume|Smoking~;Cravate|Nœud papillon;Veste|Manteau;Pull|Gilet!;Casquette|Chapeau!;Bonnet|Écharpe~;Gants|Moufles!;Chaussette|Collant~;Basket|Sandale!;Talon|Botte;Tong|Babouche!;Ceinture|Bretelles!;Lunettes|Lentilles~;Montre|Bracelet~;Collier|Boucle d'oreille~;Bague|Alliance!;Sac à dos|Valise;Portefeuille|Porte-monnaie;Parapluie|Ombrelle;Parfum|Déodorant~;Rouge à lèvres|Vernis à ongles;Maquillage|Crème;Rasoir|Tondeuse~;Coiffeur|Barbier;Perruque|Mèche;Tatouage|Piercing~;Lavage|Repassage;Couture|Broderie;Tailleur|Cordonnier;Laine|Coton~;Soie|Satin;Cuir|Daim;Uniforme|Blouse
+#metiers
+Médecin|Infirmier!;Dentiste|Pharmacien!;Professeur|Instituteur!;Avocat|Juge!;Policier|Gendarme!;Soldat|Militaire!;Pompier|Sauveteur!;Pilote|Hôtesse~;Chauffeur|Livreur~;Boulanger|Pâtissier!;Boucher|Poissonnier!;Cuisinier|Serveur~;Plombier|Électricien~;Maçon|Charpentier!;Peintre|Sculpteur!;Chanteur|Rappeur~;Acteur|Comédien!;Journaliste|Présentateur!;Banquier|Comptable;Auditeur|Contrôleur;Roi|Président;Prince|Chevalier;Magicien|Sorcier!;Voleur|Pickpocket!;Détective|Espion!;Pirate|Corsaire!;Cowboy|Indien~;Agriculteur|Pêcheur~;Berger|Éleveur~;Maire|Député!;Ministre|Ambassadeur;Patron|Directeur;Stagiaire|Apprenti;Étudiant|Élève!;Voisin|Cousin!;Parrain|Tuteur!;Jumeaux|Frères
+#famille
+Papa|Papi~;Maman|Mamie;Oncle|Tante;Mari|Fiancé~;Mariage|Baptême~;Naissance|Anniversaire;Bébé|Enfant~;Adolescent|Adulte;Ami|Copain;Amour|Passion~;Joie|Bonheur!;Tristesse|Mélancolie!;Colère|Rage!;Peur|Angoisse!;Honte|Timidité;Jalousie|Envie;Courage|Audace!;Patience|Calme!;Mensonge|Secret;Rêve|Cauchemar~
+#sport
+Football|Rugby!;Basket|Handball!;Volley|Badminton!;Tennis|Ping-pong!;Golf|Baseball~;Natation|Plongée~;Surf|Kitesurf~;Boxe|Judo;Lutte|Karaté!;Course|Marathon;Saut|Lancer;Cyclisme|Équitation;Ski|Snowboard;Patinage|Hockey;Yoga|Pilates;Musculation|Crossfit;Échecs|Dames~;Arbitre|Entraîneur~;Gardien|Défenseur;But|Penalty~;Carton jaune|Carton rouge;Coupe du monde|Ligue des champions;Maillot|Crampons~;Ballon|Balle;Filet|Raquette;Médaille|Trophée;Champion|Finaliste;Mbappé|Neymar!;Messi|Ronaldo!;Cartes|Dominos;Monopoly|Scrabble~;Puzzle|Rubik's cube;Loto|Tombola;Dé|Pion~;Jeu vidéo|Console;PlayStation|Xbox!;FIFA|Call of Duty
+#societe
+Banque|Assurance;Épargne|Crédit~;Salaire|Prime!;Impôt|Taxe!;Facture|Reçu!;Contrat|Accord!;Audit|Inspection!;Bilan|Budget;Actions|Obligations;Bourse|Marché financier~;Monnaie|Billet;Dollar|Livre sterling;Pièce|Lingot~;Chèque|Virement!;Carte bancaire|Espèces;Prêt|Dette!;Riche|Millionnaire!;Pauvre|Fauché!;Boutique|Magasin!;Élection|Référendum;Vote|Sondage!;Loi|Règlement!;Prison|Commissariat;Tribunal|Mairie;Guerre|Bataille;Paix|Trêve;Drapeau|Hymne~;Armée|Police;Sécurité|Surveillance;Voleur de sac|Cambrioleur;Mendiant|Clochard!;Manifestation|Grève;Journal télévisé|Magazine;Publicité|Affiche;Radio FM|Télé;Internet|Intranet;Algorithme|Programme;Intelligence artificielle|Robot;Drone|Hélicoptère jouet
+#corps
+Cœur|Poumon~;Cerveau|Crâne~;Main|Pied!;Bras|Jambe!;Doigt|Orteil!;Œil|Oreille;Nez|Bouche;Dent|Langue~;Cheveux|Barbe;Peau|Ongle;Genou|Coude!;Dos|Ventre;Sang|Larme~;Fièvre|Rhume;Grippe|Paludisme;Vaccin|Médicament~;Pilule|Sirop!;Bandage|Pansement!;Lunettes de vue|Appareil dentaire;Sommeil|Sieste~
+#culture
+Ramadan|Carême;Noël|Pâques;Nouvel An|Réveillon;Prière|Méditation;Coran|Bible;Ange|Démon;Paradis|Enfer~;Fantôme|Zombie;Vampire|Loup-garou;Génie|Fée~;Dragon|Licorne;Sirène|Cyclope!;Superman|Batman;Spiderman|Iron Man!;Harry Potter|Seigneur des anneaux;Naruto|Dragon Ball
+#abstrait
+Courir|Marcher;Sauter|Danser;Nager|Plonger;Crier|Chuchoter;Rire|Sourire;Pleurer|Sangloter;Manger|Boire~;Dormir|Rêver~;Lire|Écrire;Chanter|Siffler;Cuisiner|Griller;Conduire|Piloter;Voler|Planer;Pêcher|Chasser;Planter|Semer;Fouiller|Creuser;Vendre|Louer;Gagner|Réussir;Perdre|Échouer;Ouvrir|Déverrouiller;Feu|Fumée~;Eau|Glace~;Air|Vent léger;Lumière|Ombre~;Chaud|Tiède;Froid|Frais;Bruit|Musique~;Silence|Calme plat;Vitesse|Rapidité;Force|Puissance;Poids|Taille;Cercle|Ballon rond;Carré|Rectangle;Triangle|Pyramide;Ligne|Trait;Point|Virgule;Zéro|Rien~;Million|Milliard~;Premier|Gagnant;Début|Départ`;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const load=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch{return d}};
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+
+const CATS={food:['Nourriture','🍽️'],animaux:['Animaux','🦁'],nature:['Nature','🌿'],maison:['Maison & bricolage','🏠'],tech:['Tech & médias','📱'],mode:['Mode & beauté','👕'],lieux:['Lieux & pays','📍'],transport:['Transport & voyage','🚌'],metiers:['Métiers & personnages','🧑‍🔧'],famille:['Famille & émotions','❤️'],sport:['Sport & jeux','⚽'],arts:['Arts & musique','🎵'],ecole:['École','🎓'],societe:['Société & finance','🏦'],corps:['Corps & santé','🩺'],culture:['Culture & fantastique','🧙'],abstrait:['Actions & concepts','💡'],perso:['Mes paires','⭐']};
+const DIFF={1:['Facile','text-emerald-400'],2:['Moyen','text-amber-300'],3:['Difficile','text-red-400']};
+// Format de la banque : "#categorie" puis paires "Civil|Undercover" séparées par ";" — suffixe ~ = facile, ! = difficile, rien = moyen
+const defaultPairs=[];
+(()=>{let cur='perso';RAW.split('\n').forEach(line=>{line=line.trim();if(!line)return;if(line[0]==='#'){cur=line.slice(1);return}
+ line.split(';').forEach(s=>{s=s.trim();if(!s)return;let d=2;const l=s.slice(-1);if(l==='!'){d=3;s=s.slice(0,-1)}else if(l==='~'){d=1;s=s.slice(0,-1)}
+  const[c,u]=s.split('|');if(c&&u)defaultPairs.push({civ:c,und:u,cat:cur,d})})})})();
+const allPairs=()=>[...defaultPairs,...customPairs.map(p=>({d:2,...p,cat:'perso'}))];
+let customPairs=load('uc_custom_words',[]);
+let stats=Object.assign({games:0,civWins:0,undWins:0,mrwWins:0,players:{}},load('uc_stats',{}));
+let players=load('uc_players',['Alex','Sophie','Thomas','Emma']);
+let cfg=Object.assign({und:1,mrw:1,timer:45,cats:null,diff:[1,2,3]},load('uc_cfg',{}));
+const selCats=()=>cfg.cats||Object.keys(CATS);
+const filtered=()=>allPairs().filter(p=>selCats().includes(p.cat)&&cfg.diff.includes(p.d));
+function toggleCat(c){const s=selCats();cfg.cats=s.includes(c)?s.filter(x=>x!==c):[...s,c];save('uc_cfg',cfg);renderSetup();beep('click')}
+function allCats(){cfg.cats=selCats().length===Object.keys(CATS).length?[]:null;save('uc_cfg',cfg);renderSetup();beep('click')}
+function toggleDiff(d){cfg.diff=cfg.diff.includes(d)?cfg.diff.filter(x=>x!==d):[...cfg.diff,d].sort();save('uc_cfg',cfg);renderSetup();beep('click')}
+let pair={civ:'',und:''};
+let G={list:[],dist:0,turn:0,round:1,clues:[],votes:{},pending:null};
+let sound=true,timerId=null,timeLeft=0,flipped=false,AC;
+
+const ROLE={CIV:{l:'Civil',c:'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',d:"Décrivez votre mot sans le donner trop clairement."},
+ UND:{l:'Undercover',c:'bg-red-500/20 text-red-400 border border-red-500/30',d:"Votre mot est légèrement différent. Fondez-vous dans la masse !"},
+ MRW:{l:'Mr. White',c:'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30',d:"Vous n'avez AUCUN mot. Écoutez et bluffez !"}};
+const badge=r=>`<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${ROLE[r].c}">${ROLE[r].l}</span>`;
+
+function beep(t){if(!sound)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;
+ const f={flip:[300,600,.1],click:[400,420,.05],win:[400,800,.5],tick:[900,950,.08]}[t];o.connect(g);g.connect(AC.destination);
+ o.frequency.setValueAtTime(f[0],n);o.frequency.exponentialRampToValueAtTime(f[1],n+f[2]);g.gain.setValueAtTime(.15,n);g.gain.exponentialRampToValueAtTime(.001,n+f[2]);o.start();o.stop(n+f[2])}catch{}}
+function toggleSound(){sound=!sound;$('b-sound').innerHTML=`<i class="fa-solid fa-volume-${sound?'high':'xmark'}"></i>`}
+let toastT;function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.add('hidden'),2800)}
+const closeM=id=>$(id).classList.add('hidden');
+const openM=id=>$(id).classList.remove('hidden');
+function show(id){['s-setup','s-dist','s-dash','s-over'].forEach(s=>$(s).classList.add('hidden'));$(id).classList.remove('hidden');if(id!=='s-dash')clearInterval(timerId);if(id==='s-setup')renderSetup()}
+
+/* ---------- SETUP ---------- */
+function addPlayer(){const i=$('in-name'),n=i.value.trim();if(!n)return;
+ if(players.some(p=>norm(p)===norm(n))){toast('Ce prénom existe déjà.');return}
+ players.push(n);i.value='';save('uc_players',players);renderSetup();beep('click')}
+function removePlayer(i){players.splice(i,1);save('uc_players',players);renderSetup();beep('click')}
+function adjust(k,d){cfg[k]=Math.max(k==='und'?1:0,cfg[k]+d);save('uc_cfg',cfg);renderSetup();beep('click')}
+function recommend(){const n=players.length;cfg.und=n<7?1:2;cfg.mrw=n<5?0:1;save('uc_cfg',cfg);renderSetup()}
+function renderSetup(){
+ const n=players.length,civ=Math.max(0,n-cfg.und-cfg.mrw);
+ $('n-players').textContent=n;$('sel-timer').value=cfg.timer;
+ $('chips').innerHTML=players.map((p,i)=>`<div class="flex items-center gap-2 px-3 py-1.5 bg-darkBg border border-cardBorder rounded-xl text-xs font-semibold">${esc(p)}<button onclick="removePlayer(${i})" class="text-gray-500 hover:text-red-400"><i class="fa-solid fa-xmark"></i></button></div>`).join('')||'<span class="text-xs text-gray-500 italic">Aucun joueur.</span>';
+ const row=(k,l,c,ic,sub)=>`<div class="flex justify-between items-center bg-darkBg/60 p-3 rounded-xl border border-cardBorder"><div><span class="font-semibold block ${c}"><i class="fa-solid ${ic} mr-1.5"></i>${l}</span><span class="text-xs text-gray-400">${sub}</span></div><div class="flex items-center gap-2"><button class="btn-ghost !px-2.5" onclick="adjust('${k}',-1)">−</button><span class="font-bold w-4 text-center">${cfg[k]}</span><button class="btn-ghost !px-2.5" onclick="adjust('${k}',1)">+</button></div></div>`;
+ $('roles').innerHTML=row('und','Undercover(s)','text-red-400','fa-user-ninja','Mot légèrement différent')+row('mrw','Mr. White','text-cyan-400','fa-user-ghost','Aucun mot, doit bluffer')+
+  `<div class="flex justify-between items-center bg-darkBg/30 p-3 rounded-xl border border-cardBorder/40"><span class="font-semibold text-emerald-400"><i class="fa-solid fa-user-shield mr-1.5"></i>Civils</span><span class="font-bold text-emerald-400 text-base">${civ}</span></div>`;
+ const r=n<7?1:2,m=n<5?0:1;
+ $('hint').innerHTML=`Conseillé pour ${n} joueurs : ${r} Undercover${r>1?'s':''}, ${m} Mr. White. <button class="text-gold-400 underline" onclick="recommend()">Appliquer</button>`;
+ const cnt={};allPairs().filter(p=>cfg.diff.includes(p.d)).forEach(p=>cnt[p.cat]=(cnt[p.cat]||0)+1);
+ $('cats').innerHTML=Object.entries(CATS).filter(([k])=>k!=='perso'||customPairs.length).map(([k,[l,e]])=>{const on=selCats().includes(k);return `<button onclick="toggleCat('${k}')" class="px-2.5 py-1 rounded-xl text-xs border transition ${on?'bg-gold-500/20 border-gold-500 text-gold-300':'bg-darkBg border-cardBorder text-gray-500'}">${e} ${l} <span class="opacity-60">${cnt[k]||0}</span></button>`}).join('');
+ $('diffs').innerHTML=[1,2,3].map(d=>{const on=cfg.diff.includes(d);return `<button onclick="toggleDiff(${d})" class="px-3 py-1 rounded-xl text-xs border transition ${on?'bg-gold-500/20 border-gold-500 '+DIFF[d][1]:'bg-darkBg border-cardBorder text-gray-500'}">${DIFF[d][0]}</button>`}).join('');
+ $('n-bank').textContent=filtered().length;
+ $('b-resume').classList.toggle('hidden',!load('uc_game',null));
+}
+function toggleMode(){$('custom-in').classList.toggle('hidden',document.querySelector('input[name=wm]:checked').value!=='custom')}
+
+/* ---------- START ---------- */
+function startGame(){
+ const n=players.length,civs=n-cfg.und-cfg.mrw;
+ if(n<3)return toast('Ajoutez au moins 3 joueurs.');
+ if(civs<2)return toast('Il faut au moins 2 Civils : réduisez les rôles spéciaux.');
+ const mode=document.querySelector('input[name=wm]:checked').value;
+ if(mode==='custom'){const a=$('cw-civ').value.trim(),b=$('cw-und').value.trim();
+  if(!a||!b)return toast('Renseignez les deux mots sur-mesure.');pair={civ:a,und:b}}
+ else{const all=filtered();if(!all.length)return toast('Aucune paire avec ces filtres.');
+  const key=p=>p.civ+'|'+p.und;let used=load('uc_used',[]);
+  let pool=all.filter(p=>!used.includes(key(p)));if(!pool.length){used=used.filter(k=>!all.some(p=>key(p)===k));pool=all}
+  const pk=pool[Math.floor(Math.random()*pool.length)];used.push(key(pk));save('uc_used',used);
+  pair=Math.random()<.5?{civ:pk.und,und:pk.civ}:{civ:pk.civ,und:pk.und}}
+ const roles=shuffle([...Array(cfg.und).fill('UND'),...Array(cfg.mrw).fill('MRW'),...Array(civs).fill('CIV')]);
+ let list=shuffle(players.map((name,i)=>({id:i,name,role:roles[i],word:roles[i]==='CIV'?pair.civ:roles[i]==='UND'?pair.und:'',alive:true})));
+ if(list[0].role==='MRW'){const k=list.findIndex(p=>p.role!=='MRW');[list[0],list[k]]=[list[k],list[0]]}
+ G={list,dist:0,turn:0,round:1,clues:[],votes:{},pending:null};
+ show('s-dist');setupCard();
+}
+function setupCard(){
+ const p=G.list[G.dist],n=G.list.length;
+ $('dist-name').textContent=p.name;$('dist-i').textContent=G.dist+1;$('dist-n').textContent=n;$('dist-bar').style.width=(G.dist/n*100)+'%';
+ $('card').classList.remove('ry');flipped=false;
+ $('card-front').textContent=p.name;$('card-word').textContent=p.role==='MRW'?'AUCUN MOT':p.word;
+ $('card-badge').innerHTML=badge(p.role);$('card-desc').textContent=ROLE[p.role].d;
+}
+function flipCard(){flipped=!flipped;$('card').classList.toggle('ry',flipped);if(flipped)beep('flip')}
+function confirmCard(e){e.stopPropagation();$('card').classList.remove('ry');flipped=false;G.dist++;
+ setTimeout(()=>{if(G.dist<G.list.length)setupCard();else{show('s-dash');startTimer();renderDash();saveGame()}},350)}
+
+/* ---------- DASHBOARD ---------- */
+const alive=()=>G.list.filter(p=>p.alive);
+function saveGame(){save('uc_game',{G,pair})}
+function renderDash(){
+ const al=alive(),voting=G.turn>=al.length;
+ $('d-round').textContent=G.round;
+ $('d-turn').textContent=voting?'Phase de vote 🗳️':al[G.turn].name;
+ $('d-clue-box').classList.toggle('hidden',voting);
+ $('d-players').innerHTML=al.map((p,i)=>`<div class="card flex items-center justify-between gap-2 ${i===G.turn?'!border-gold-500':''}">
+  <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-darkBg border border-cardBorder flex items-center justify-center font-bold">${esc(p.name[0].toUpperCase())}</div>
+  <div><div class="font-bold">${esc(p.name)}</div><div class="text-[11px] text-gray-400">${i<G.turn?'Indice donné':i===G.turn?'À son tour':'En attente'}</div></div></div>
+  <div class="flex items-center gap-2"><button class="btn-ghost !px-2.5" onclick="vote(${p.id},-1)">−</button><span class="w-5 text-center font-extrabold text-amber-300">${G.votes[p.id]||0}</span><button class="btn-ghost !px-2.5" onclick="vote(${p.id},1)">+</button></div></div>`).join('');
+ $('d-clues').innerHTML=G.clues.length?G.clues.slice().reverse().map(c=>`<div class="text-xs"><span class="text-gold-400 font-bold">M${c.r}</span> <b>${esc(c.n)}</b> : ${esc(c.t)}</div>`).join(''):'<span class="text-xs text-gray-500 italic">Aucun indice noté.</span>';
+ const dead=G.list.filter(p=>!p.alive);$('d-ecount').textContent=dead.length;
+ $('d-elim').innerHTML=dead.length?dead.map(p=>`<div class="px-2 py-1 bg-darkBg/80 border border-cardBorder rounded-xl text-xs flex items-center gap-2 text-gray-400"><span class="line-through">${esc(p.name)}</span>${badge(p.role)}</div>`).join(''):'<span class="text-xs text-gray-500 italic">Personne pour l\'instant.</span>';
+}
+function startTimer(){clearInterval(timerId);const t=$('d-timer');
+ if(!cfg.timer||G.turn>=alive().length){t.textContent='';return}
+ timeLeft=cfg.timer;tick();
+ timerId=setInterval(()=>{timeLeft--;tick();if(timeLeft>0&&timeLeft<=5)beep('tick');if(timeLeft<=0){clearInterval(timerId);beep('flip')}},1000)}
+function tick(){const t=$('d-timer');t.textContent=timeLeft>0?`⏱ ${timeLeft} s`:'⏱ Temps écoulé !';t.className='text-sm font-extrabold '+(timeLeft<=10?'text-red-400':'text-gold-400')}
+function addClue(){const i=$('in-clue'),al=alive();if(G.turn>=al.length)return;
+ G.clues.push({r:G.round,n:al[G.turn].name,t:i.value.trim()||'(sans indice noté)'});i.value='';
+ G.turn++;beep('click');startTimer();renderDash();saveGame();if(G.turn<al.length)i.focus()}
+function vote(id,d){G.votes[id]=Math.max(0,(G.votes[id]||0)+d);beep('click');renderDash();saveGame()}
+function validateVote(){
+ const al=alive(),max=Math.max(...al.map(p=>G.votes[p.id]||0));
+ if(max===0)return toast('Aucun vote enregistré.');
+ const top=al.filter(p=>(G.votes[p.id]||0)===max);
+ if(top.length>1)return toast('Égalité entre '+top.map(p=>p.name).join(', ')+' : revotez.');
+ if(confirm(`Éliminer ${top[0].name} (${max} vote${max>1?'s':''}) ?`))eliminate(top[0]);
+}
+function eliminate(p){p.alive=false;G.votes={};clearInterval(timerId);
+ if(p.role==='MRW'){G.pending=p;$('in-guess').value='';openM('m-mrw');renderDash();saveGame()}
+ else{toast(`${p.name} était ${ROLE[p.role].l}`);afterElim()}}
+function afterElim(){if(checkWin())return;G.round++;G.turn=0;startTimer();renderDash();saveGame()}
+function mrwGuess(){const g=$('in-guess').value;if(!g.trim())return toast('Saisissez un mot.');
+ if(norm(g)===norm(pair.civ))mrwResolve(true);else{toast('Raté !');mrwResolve(false)}}
+function mrwResolve(ok){closeM('m-mrw');G.pending=null;if(ok)endGame('MRW');else afterElim()}
+function checkWin(){const al=alive(),civ=al.filter(p=>p.role==='CIV').length,en=al.length-civ;
+ if(en===0){endGame('CIV');return true}if(en>=civ){endGame('ENEMY');return true}return false}
+
+/* ---------- END ---------- */
+function endGame(res){
+ clearInterval(timerId);beep('win');localStorage.removeItem('uc_game');show('s-over');
+ const T={CIV:['Victoire des Civils !','Tous les Undercovers et Mr. White ont été démasqués.','bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'],
+  ENEMY:['Victoire des infiltrés !','Les Undercovers (et Mr. White) ont survécu jusqu\'au bout.','bg-red-500/20 text-red-400 border border-red-500/40'],
+  MRW:['Victoire de Mr. White !','Il a deviné le mot secret des Civils. Coup de maître !','bg-cyan-500/20 text-cyan-400 border border-cyan-500/40']}[res];
+ $('o-icon').className='w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl '+T[2];
+ $('o-title').textContent=T[0];$('o-sub').textContent=T[1];$('o-civ').textContent=pair.civ;$('o-und').textContent=pair.und;
+ stats.games++;if(res==='CIV')stats.civWins++;else if(res==='MRW')stats.mrwWins++;else stats.undWins++;
+ G.list.forEach(p=>{const s=stats.players[p.name]||(stats.players[p.name]={games:0,wins:0});s.games++;
+  if((res==='CIV'&&p.role==='CIV')||(res==='ENEMY'&&p.role!=='CIV')||(res==='MRW'&&p.role==='MRW'))s.wins++});
+ save('uc_stats',stats);
+ $('o-recap').innerHTML=G.list.map(p=>`<div class="flex justify-between items-center bg-darkBg p-3 rounded-xl border border-cardBorder text-xs"><div class="flex items-center gap-2"><b>${esc(p.name)}</b>${badge(p.role)}${p.alive?'':'<span class="text-gray-500">éliminé</span>'}</div><span class="text-gray-400 italic font-mono">${p.role==='MRW'?'aucun mot':esc(p.word)}</span></div>`).join('');
+}
+function abandon(){if(confirm('Abandonner la partie en cours ?')){localStorage.removeItem('uc_game');show('s-setup')}}
+function resumeGame(){const s=load('uc_game',null);if(!s)return;G=s.G;pair=s.pair;show('s-dash');startTimer();renderDash();
+ if(G.pending){openM('m-mrw')}}
+
+/* ---------- MODALS ---------- */
+function openWords(){renderWords();openM('m-words')}
+function addPair(){const a=$('db-1').value.trim(),b=$('db-2').value.trim();if(!a||!b)return;
+ customPairs.push({civ:a,und:b,d:+$('db-d').value});save('uc_custom_words',customPairs);$('db-1').value=$('db-2').value='';renderWords();renderSetup()}
+function delPair(i){customPairs.splice(i,1);save('uc_custom_words',customPairs);renderWords();renderSetup()}
+function renderWords(){$('db-total').textContent=`Banque totale : ${defaultPairs.length+customPairs.length} paires (${defaultPairs.length} par défaut dans ${Object.keys(CATS).length-1} catégories, ${customPairs.length} à vous)`;
+ $('db-list').innerHTML=customPairs.length?customPairs.map((p,i)=>`<div class="flex justify-between items-center bg-darkBg px-3 py-2 rounded-xl text-xs border border-cardBorder"><span>${esc(p.civ)} <span class="text-gray-500">/</span> ${esc(p.und)} <span class="${DIFF[p.d||2][1]} text-[10px] ml-1">${DIFF[p.d||2][0]}</span></span><button onclick="delPair(${i})" class="text-gray-500 hover:text-red-400"><i class="fa-solid fa-trash"></i></button></div>`).join(''):'<span class="text-xs text-gray-500 italic">Aucune paire personnelle.</span>'}
+function openStats(){
+ const k=(l,v,c)=>`<div class="bg-darkBg p-2 rounded-xl border border-cardBorder"><span class="text-[10px] ${c} uppercase block">${l}</span><span class="text-lg font-extrabold ${c}">${v}</span></div>`;
+ $('st-top').innerHTML=k('Parties',stats.games,'text-white')+k('Civils',stats.civWins,'text-emerald-400')+k('Infiltrés',stats.undWins,'text-red-400')+k('Mr. W',stats.mrwWins,'text-cyan-400');
+ const arr=Object.entries(stats.players).map(([n,s])=>({n,...s})).sort((a,b)=>b.wins-a.wins);
+ $('st-board').innerHTML=arr.length?arr.map(p=>`<div class="flex justify-between bg-darkBg p-2.5 rounded-xl border border-cardBorder text-xs"><b>${esc(p.n)}</b><span class="text-amber-400 font-extrabold">${p.wins} victoire${p.wins>1?'s':''} <span class="text-gray-500 font-normal">/ ${p.games} parties (${Math.round(p.wins/p.games*100)}%)</span></span></div>`).join(''):'<span class="text-xs text-gray-500 italic">Aucune donnée.</span>';
+ openM('m-stats')}
+function resetStats(){if(confirm('Réinitialiser les statistiques ?')){stats={games:0,civWins:0,undWins:0,mrwWins:0,players:{}};save('uc_stats',stats);openStats()}}
+function openPreview(){$('pv-civ').textContent=pair.civ;$('pv-und').textContent=pair.und;$('pv').classList.add('blur-md');openM('m-prev')}
+function peek(){$('pv').classList.remove('blur-md');setTimeout(()=>$('pv').classList.add('blur-md'),3000)}
+
+document.addEventListener('DOMContentLoaded',renderSetup);
+</script>
 </body>
 </html>
