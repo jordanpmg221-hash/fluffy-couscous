@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Undercover - Dashboard</title>
+<meta name="author" content="PMG">
+<title>Undercover by PMG - Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config={darkMode:'class',theme:{extend:{colors:{gold:{400:'#facc15',500:'#eab308',600:'#ca8a04'},darkBg:'#0b0f17',cardBg:'#161e2e',cardBorder:'#273549'},fontFamily:{sans:['Inter','sans-serif']}}}}
@@ -38,7 +39,8 @@ body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-actio
   <div class="flex items-center gap-3">
    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-black text-xl"><i class="fa-solid fa-user-secret"></i></div>
    <div><h1 class="text-xl font-bold bg-gradient-to-r from-amber-200 via-gold-400 to-amber-500 bg-clip-text text-transparent leading-none">UNDERCOVER</h1>
-   <span class="text-[10px] text-gray-400 tracking-widest uppercase">Dashboard &amp; Game Manager</span></div>
+   <span class="text-[10px] text-gray-400 tracking-widest uppercase">Dashboard &amp; Game Manager</span>
+   <span class="ml-1 px-1.5 py-0.5 rounded-md bg-gold-500/15 border border-gold-500/40 text-gold-400 text-[10px] font-extrabold tracking-widest">by PMG</span></div>
   </div>
   <div class="flex gap-2">
    <button id="b-sound" onclick="toggleSound()" class="btn-ghost" title="Son"><i class="fa-solid fa-volume-high"></i></button>
@@ -183,6 +185,7 @@ body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-actio
   </div></div>
  <div class="card max-w-lg mx-auto text-left space-y-2"><h3 class="lbl text-gray-300">Récapitulatif</h3>
   <div id="o-recap" class="space-y-2 max-h-60 overflow-y-auto"></div></div>
+ <p class="text-[11px] text-gray-500 tracking-widest uppercase">Un jeu créé par <span class="text-gold-400 font-extrabold">PMG</span></p>
  <div class="flex justify-center gap-3 flex-wrap">
   <button onclick="startGame()" class="btn-gold py-3 px-6"><i class="fa-solid fa-rotate-right mr-1"></i> Rejouer (mêmes joueurs)</button>
   <button onclick="show('s-setup')" class="btn-ghost py-3"><i class="fa-solid fa-gear mr-1"></i> Configuration</button>
@@ -227,7 +230,7 @@ body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-actio
 
 <div id="toast" class="fixed bottom-16 left-1/2 -translate-x-1/2 bg-cardBg border border-gold-500/50 text-sm px-4 py-2 rounded-xl shadow-xl z-[60] hidden max-w-[90vw] text-center"></div>
 
-<footer class="border-t border-cardBorder/40 py-3 text-center text-xs text-gray-500">Undercover Dashboard &bull; Gold &amp; Dark</footer>
+<footer class="border-t border-cardBorder/40 py-3 text-center text-xs text-gray-500">Undercover Dashboard &bull; Créé par <span class="font-extrabold tracking-widest bg-gradient-to-r from-amber-200 via-gold-400 to-amber-500 bg-clip-text text-transparent">PMG</span> &copy; 2026</footer>
 
 <script>
 const RAW=`#food
