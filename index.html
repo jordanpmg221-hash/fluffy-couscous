@@ -25,9 +25,8 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{gold:{400:'#facc15',500
 }
 </style>
 <style>
-body{font-family:'Inter',sans-serif;background:#0b0f17 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cg fill='none' stroke='%23eab308' stroke-opacity='.07' stroke-width='1.5'%3E%3Ccircle cx='45' cy='45' r='4'/%3E%3Cpath d='M0 0h8M0 0v8M90 90h-8M90 90v-8M45 20v8M45 62v8'/%3E%3C/g%3E%3C/svg%3E");color:#f3f4f6;touch-action:manipulation}
+body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-action:manipulation}
 .ci{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.cardfront{background-image:repeating-linear-gradient(45deg,rgba(234,179,8,.06) 0 2px,transparent 2px 14px)}
 .persp{perspective:1000px}.preserve{transform-style:preserve-3d}
 .bf{backface-visibility:hidden;-webkit-backface-visibility:hidden}.ry{transform:rotateY(180deg)}
 .glow{box-shadow:0 0 20px rgba(234,179,8,.15)}
@@ -90,13 +89,22 @@ body{font-family:'Inter',sans-serif;background:#0b0f17 url("data:image/svg+xml,%
  <button id="b-resume" onclick="resumeGame()" class="btn-gold w-full hidden py-3"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Reprendre la partie en cours</button>
 
  <div class="card glow">
+  <div class="mb-4 space-y-2">
+   <div class="flex items-center justify-between">
+    <span class="lbl"><i class="fa-solid fa-users"></i> Nombre de joueurs</span>
+    <div class="flex items-center gap-2">
+     <button onclick="setCount(players.length-1)" class="btn-ghost !px-3" aria-label="Moins un joueur">−</button>
+     <span id="cnt-big" class="text-2xl font-extrabold text-gold-400 w-9 text-center">4</span>
+     <button onclick="setCount(players.length+1)" class="btn-ghost !px-3" aria-label="Plus un joueur">+</button>
+    </div>
+   </div>
+   <input id="rng-players" type="range" min="3" max="20" step="1" value="4" oninput="setCount(+this.value)" class="w-full h-2 cursor-pointer accent-yellow-500" aria-label="Nombre de joueurs">
+   <div class="flex justify-between text-[10px] text-gray-500 px-0.5"><span>3</span><span>7</span><span>12</span><span>16</span><span>20</span></div>
+  </div>
   <div class="flex gap-2 mb-3">
    <input id="in-name" maxlength="20" placeholder="Nom du joueur" class="inp" onkeydown="if(event.key==='Enter')addPlayer()">
    <button onclick="addPlayer()" class="btn-gold whitespace-nowrap"><i class="fa-solid fa-plus"></i> Ajouter</button>
   </div>
-  <div class="flex justify-between text-xs text-gray-400 uppercase font-semibold px-1 mb-2">
-   <span>Joueurs (<span id="n-players">0</span>)</span><span class="text-amber-400/80">3 à 12 conseillés</span></div>
-  <div id="chips" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto"></div>
  </div>
 
  <div class="card space-y-3">
@@ -104,7 +112,7 @@ body{font-family:'Inter',sans-serif;background:#0b0f17 url("data:image/svg+xml,%
   <button onclick="allCats()" class="text-xs text-gold-400 underline">Tout / rien</button></div>
   <div id="cats" class="flex flex-wrap gap-2"></div>
   <div class="flex flex-wrap items-center gap-2"><span class="text-xs text-gray-400">Difficulté :</span><div id="diffs" class="flex gap-2"></div></div>
-  <p class="text-[11px] text-gray-500">Facile : mots éloignés, l'infiltré est vite repéré. Difficile : mots très proches, le bluff est plus facile.</p>
+  <p class="text-[11px] text-gray-500">Facile : mots éloignés, l'infiltré est vite repéré. Difficile : mots très proches. <span class="text-fuchsia-400">Très difficile : mots quasi identiques (Coca-Cola / Pepsi), démasquer l'infiltré devient un vrai casse-tête.</span></p>
  </div>
 
  <div class="grid md:grid-cols-2 gap-4">
@@ -193,7 +201,7 @@ body{font-family:'Inter',sans-serif;background:#0b0f17 url("data:image/svg+xml,%
 
  <div class="grid md:grid-cols-2 gap-3">
   <div class="card space-y-2"><h4 class="lbl text-gray-400"><i class="fa-solid fa-comments"></i> Journal des indices</h4>
-   <div id="d-clues" class="max-h-36 overflow-y-auto space-y-1"></div></div>
+   <div id="d-clues" class="space-y-1"></div></div>
   <div class="card space-y-2"><h4 class="lbl text-gray-400"><i class="fa-solid fa-skull"></i> Éliminés (<span id="d-ecount">0</span>)</h4>
    <div id="d-elim" class="flex flex-wrap gap-2"></div></div>
  </div>
@@ -216,7 +224,10 @@ body{font-family:'Inter',sans-serif;background:#0b0f17 url("data:image/svg+xml,%
    <div class="bg-darkBg p-3 rounded-xl border border-red-500/20"><span class="text-[10px] text-red-400 uppercase font-semibold block">Mot Undercover</span><span id="o-und" class="text-lg font-bold"></span></div>
   </div></div>
  <div class="card max-w-lg mx-auto text-left space-y-2"><h3 class="lbl text-gray-300">Récapitulatif</h3>
-  <div id="o-recap" class="space-y-2 max-h-60 overflow-y-auto"></div></div>
+  <div id="o-recap" class="space-y-2"></div></div>
+ <div class="card max-w-lg mx-auto text-left space-y-2"><h3 class="lbl text-gray-300"><i class="fa-solid fa-ranking-star text-gold-400"></i> Classement général</h3>
+  <p class="text-[11px] text-gray-500">Victoires cumulées de toutes vos parties. Les joueurs de cette partie sont surlignés.</p>
+  <div id="o-rank" class="space-y-2"></div></div>
  <p class="text-[11px] text-gray-500 tracking-widest uppercase">Un jeu créé par <span class="text-gold-400 font-extrabold">PMG</span></p>
  <div class="flex justify-center gap-3 flex-wrap">
   <button onclick="startGame()" class="btn-gold py-3 px-6"><i class="fa-solid fa-rotate-right mr-1"></i> Rejouer (mêmes joueurs)</button>
@@ -240,7 +251,7 @@ body{font-family:'Inter',sans-serif;background:#0b0f17 url("data:image/svg+xml,%
  <div class="flex justify-between items-center border-b border-cardBorder pb-2"><h3 class="font-bold"><i class="fa-solid fa-book-bookmark text-gold-400"></i> Mes paires de mots</h3>
  <button onclick="closeM('m-words')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button></div>
  <div class="grid grid-cols-2 gap-2"><input id="db-1" class="inp" placeholder="Mot Civil"><input id="db-2" class="inp" placeholder="Mot Undercover"></div>
- <div class="flex items-center gap-2"><select id="db-d" class="inp"><option value="1">Facile</option><option value="2" selected>Moyen</option><option value="3">Difficile</option></select><span class="text-[11px] text-gray-500">Facile = mots éloignés, Difficile = mots très proches</span></div>
+ <div class="flex items-center gap-2"><select id="db-d" class="inp"><option value="1">Facile</option><option value="2" selected>Moyen</option><option value="3">Difficile</option><option value="4">Très difficile</option></select><span class="text-[11px] text-gray-500">Facile = mots éloignés, Difficile = mots très proches</span></div>
  <button onclick="addPair()" class="btn-ghost w-full">+ Ajouter à ma banque</button>
  <div class="text-xs text-gray-400" id="db-total"></div>
  <div id="db-list" class="max-h-48 overflow-y-auto space-y-1.5"></div></div></div>
@@ -298,7 +309,41 @@ Cœur|Poumon~;Cerveau|Crâne~;Main|Pied!;Bras|Jambe!;Doigt|Orteil!;Œil|Oreille;
 #culture
 Ramadan|Carême;Noël|Pâques;Nouvel An|Réveillon;Prière|Méditation;Coran|Bible;Ange|Démon;Paradis|Enfer~;Fantôme|Zombie;Vampire|Loup-garou;Génie|Fée~;Dragon|Licorne;Sirène|Cyclope!;Superman|Batman;Spiderman|Iron Man!;Harry Potter|Seigneur des anneaux;Naruto|Dragon Ball
 #abstrait
-Courir|Marcher;Sauter|Danser;Nager|Plonger;Crier|Chuchoter;Rire|Sourire;Pleurer|Sangloter;Manger|Boire~;Dormir|Rêver~;Lire|Écrire;Chanter|Siffler;Cuisiner|Griller;Conduire|Piloter;Voler|Planer;Pêcher|Chasser;Planter|Semer;Fouiller|Creuser;Vendre|Louer;Gagner|Réussir;Perdre|Échouer;Ouvrir|Déverrouiller;Feu|Fumée~;Eau|Glace~;Air|Vent léger;Lumière|Ombre~;Chaud|Tiède;Froid|Frais;Bruit|Musique~;Silence|Calme plat;Vitesse|Rapidité;Force|Puissance;Poids|Taille;Cercle|Ballon rond;Carré|Rectangle;Triangle|Pyramide;Ligne|Trait;Point|Virgule;Zéro|Rien~;Million|Milliard~;Premier|Gagnant;Début|Départ`;
+Courir|Marcher;Sauter|Danser;Nager|Plonger;Crier|Chuchoter;Rire|Sourire;Pleurer|Sangloter;Manger|Boire~;Dormir|Rêver~;Lire|Écrire;Chanter|Siffler;Cuisiner|Griller;Conduire|Piloter;Voler|Planer;Pêcher|Chasser;Planter|Semer;Fouiller|Creuser;Vendre|Louer;Gagner|Réussir;Perdre|Échouer;Ouvrir|Déverrouiller;Feu|Fumée~;Eau|Glace~;Air|Vent léger;Lumière|Ombre~;Chaud|Tiède;Froid|Frais;Bruit|Musique~;Silence|Calme plat;Vitesse|Rapidité;Force|Puissance;Poids|Taille;Cercle|Ballon rond;Carré|Rectangle;Triangle|Pyramide;Ligne|Trait;Point|Virgule;Zéro|Rien~;Million|Milliard~;Premier|Gagnant;Début|Départ
+#food
+Coca-Cola|Pepsi!!;Cappuccino|Latte!!;Spaghetti|Tagliatelles!!;Tarte aux pommes|Tarte aux poires!!;Chocolat noir|Chocolat au lait!!;Eau plate|Eau gazeuse!!;Jus d'orange|Jus de mandarine!!;Mojito|Caipirinha!!
+#animaux
+Tigre|Panthère!!;Corbeau|Corneille!!;Mouette|Goéland!!;Lièvre|Lapin de garenne!!;Cerf|Chevreuil!!;Phoque|Otarie!!;Guêpe|Frelon!!;Taureau|Bœuf!!
+#nature
+Étang|Mare!!;Ruisseau|Torrent!!;Brouillard|Brume!!;Grotte|Caverne!!;Ouragan|Cyclone!!;Aube|Aurore!!
+#maison
+Canapé|Sofa!!;Tapis|Moquette!!;Lustre|Plafonnier!!;Évier|Lavabo!!;Mug|Tasse!!;Poêle|Sauteuse!!
+#tech
+iPhone|Samsung!!;Windows|Linux!!;Chrome|Firefox!!;WhatsApp|Signal!!;Zoom|Teams!!;Uber|Bolt!!
+#mode
+Pull|Sweat!!;Sweat|Hoodie!!;Short|Bermuda!!;Collier|Pendentif!!;Bracelet|Gourmette!!;Parfum|Eau de toilette!!
+#lieux
+Paris|Lyon!!;Canada|États-Unis!!;Espagne|Portugal!!;Norvège|Suède!!;Japon|Corée!!;Australie|Nouvelle-Zélande!!;Rome|Milan!!
+#transport
+Métro|RER!!;Train|TGV!!;Taxi|VTC!!;Bus|Autocar!!;Yacht|Catamaran!!;Vélo|VTT!!
+#metiers
+Médecin|Chirurgien!!;Infirmier|Aide-soignant!!;Avocat|Notaire!!;Juge|Procureur!!;Ingénieur|Technicien!!;Architecte|Designer!!
+#famille
+Tristesse|Chagrin!!;Joie|Allégresse!!;Peur|Frayeur!!;Fierté|Orgueil!!;Amitié|Camaraderie!!;Frère|Demi-frère!!
+#sport
+Football|Futsal!!;Tennis|Squash!!;Natation|Water-polo!!;Boxe|Kickboxing!!;Judo|Jiu-jitsu!!;Ski alpin|Ski de fond!!;Penalty|Coup franc!!;Marathon|Semi-marathon!!
+#arts
+Violon|Alto!!;Guitare|Basse!!;Piano|Clavecin!!;Saxophone|Clarinette!!;Poème|Sonnet!!;Film|Documentaire!!
+#ecole
+Lycée|Collège!!;Examen|Partiel!!;Rédaction|Dissertation!!;Résumé|Synthèse!!;Algèbre|Géométrie!!
+#societe
+Dividende|Intérêt!!;Inflation|Déflation!!;Hypothèque|Prêt immobilier!!;Facture|Devis!!;Maire|Préfet!!;Amende|Contravention!!
+#corps
+Angine|Bronchite!!;Entorse|Foulure!!;Veine|Artère!!;Foie|Rein!!;Coude|Poignet!!;Migraine|Mal de tête!!
+#culture
+Zombie|Momie!!;Elfe|Nain!!;Ogre|Troll!!;Épée|Sabre!!;Sorcière|Magicienne!!
+#abstrait
+Chuchoter|Murmurer!!;Crier|Hurler!!;Regarder|Observer!!;Marcher|Flâner!!;Joli|Mignon!!;Grand|Immense!!`;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const load=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch{return d}};
@@ -307,16 +352,19 @@ const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math
 const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
 
 const CATS={food:['Nourriture','🍽️'],animaux:['Animaux','🦁'],nature:['Nature','🌿'],maison:['Maison & bricolage','🏠'],tech:['Tech & médias','📱'],mode:['Mode & beauté','👕'],lieux:['Lieux & pays','📍'],transport:['Transport & voyage','🚌'],metiers:['Métiers & personnages','🧑‍🔧'],famille:['Famille & émotions','❤️'],sport:['Sport & jeux','⚽'],arts:['Arts & musique','🎵'],ecole:['École','🎓'],societe:['Société & finance','🏦'],corps:['Corps & santé','🩺'],culture:['Culture & fantastique','🧙'],abstrait:['Actions & concepts','💡'],perso:['Mes paires','⭐']};
-const DIFF={1:['Facile','text-emerald-400'],2:['Moyen','text-amber-300'],3:['Difficile','text-red-400']};
-// Format de la banque : "#categorie" puis paires "Civil|Undercover" séparées par ";" — suffixe ~ = facile, ! = difficile, rien = moyen
+const DIFF={1:['Facile','text-emerald-400'],2:['Moyen','text-amber-300'],3:['Difficile','text-red-400'],4:['Très difficile','text-fuchsia-400']};
+// Format de la banque : "#categorie" puis paires "Civil|Undercover" séparées par ";" — suffixe ~ = facile, ! = difficile, !! = très difficile, rien = moyen
 const defaultPairs=[];
 (()=>{let cur='perso';RAW.split('\n').forEach(line=>{line=line.trim();if(!line)return;if(line[0]==='#'){cur=line.slice(1);return}
- line.split(';').forEach(s=>{s=s.trim();if(!s)return;let d=2;const l=s.slice(-1);if(l==='!'){d=3;s=s.slice(0,-1)}else if(l==='~'){d=1;s=s.slice(0,-1)}
+ line.split(';').forEach(s=>{s=s.trim();if(!s)return;let d=2;const l=s.slice(-1);if(s.endsWith('!!')){d=4;s=s.slice(0,-2)}else if(l==='!'){d=3;s=s.slice(0,-1)}else if(l==='~'){d=1;s=s.slice(0,-1)}
   const[c,u]=s.split('|');if(c&&u)defaultPairs.push({civ:c,und:u,cat:cur,d})})})})();
 const allPairs=()=>[...defaultPairs,...customPairs.map(p=>({d:2,...p,cat:'perso'}))];
 let customPairs=load('uc_custom_words',[]);
 let stats=Object.assign({games:0,civWins:0,undWins:0,mrwWins:0,players:{}},load('uc_stats',{}));
-let players=load('uc_players',['Alex','Sophie','Thomas','Emma']);
+const OLD_NAMES=['Alex','Sophie','Thomas','Emma'];
+let players=(load('uc_players',null)||[null,null,null,null]).map(n=>OLD_NAMES.includes(n)?null:n);
+players=players.map((n,i)=>{if(n)return n;let k=i+1;while(players.includes('Joueur '+k))k++;return 'Joueur '+k});
+save('uc_players',players);
 let cfg=Object.assign({und:1,mrw:1,timer:45,cats:null,diff:[1,2,3]},load('uc_cfg',{}));
 const selCats=()=>cfg.cats||Object.keys(CATS);
 const filtered=()=>allPairs().filter(p=>selCats().includes(p.cat)&&cfg.diff.includes(p.d));
@@ -378,15 +426,23 @@ function show(id){['s-setup','s-dist','s-dash','s-over'].forEach(s=>$(s).classLi
 
 /* ---------- SETUP ---------- */
 function addPlayer(){const i=$('in-name'),n=i.value.trim();if(!n)return;
+ if(players.length>=20){toast('Maximum 20 joueurs.');return}
  if(players.some(p=>norm(p)===norm(n))){toast('Ce prénom existe déjà.');return}
  players.push(n);i.value='';save('uc_players',players);renderSetup();beep('click')}
+function setCount(n){n=Math.max(3,Math.min(20,n|0));
+ while(players.length<n){let k=players.length+1;while(players.some(p=>norm(p)===norm('Joueur '+k)))k++;players.push('Joueur '+k)}
+ while(players.length>n)players.pop();
+ while(n-cfg.und-cfg.mrw<2){if(cfg.mrw>0)cfg.mrw--;else if(cfg.und>1)cfg.und--;else break}
+ save('uc_players',players);save('uc_cfg',cfg);renderSetup();beep('click')}
+function renamePlayer(i){const o=players[i],n=(prompt('Nouveau nom du joueur :',o)||'').trim().slice(0,20);if(!n||n===o)return;
+ if(players.some((p,j)=>j!==i&&norm(p)===norm(n)))return toast('Ce prénom existe déjà.');
+ if(avs[o]!=null){avs[n]=avs[o];delete avs[o];save('uc_avs',avs)}players[i]=n;save('uc_players',players);renderSetup()}
 function removePlayer(i){players.splice(i,1);save('uc_players',players);renderSetup();beep('click')}
 function adjust(k,d){cfg[k]=Math.max(k==='und'?1:0,cfg[k]+d);save('uc_cfg',cfg);renderSetup();beep('click')}
 function recommend(){const n=players.length;cfg.und=n<7?1:2;cfg.mrw=n<5?0:1;save('uc_cfg',cfg);renderSetup()}
 function renderSetup(){
  const n=players.length,civ=Math.max(0,n-cfg.und-cfg.mrw);
- $('n-players').textContent=n;$('sel-timer').value=cfg.timer;
- $('chips').innerHTML=players.map((p,i)=>`<div class="flex items-center gap-2 px-3 py-1.5 bg-darkBg border border-cardBorder rounded-xl text-xs font-semibold"><button onclick="cycleAv(${i})" title="Changer d'avatar">${av(p,28)}</button>${esc(p)}<button onclick="removePlayer(${i})" class="text-gray-500 hover:text-red-400"><i class="fa-solid fa-xmark"></i></button></div>`).join('')||'<span class="text-xs text-gray-500 italic">Aucun joueur.</span>';
+ $('rng-players').value=n;$('cnt-big').textContent=n;$('sel-timer').value=cfg.timer;
  const row=(k,l,c,ic,sub)=>`<div class="flex justify-between items-center bg-darkBg/60 p-3 rounded-xl border border-cardBorder"><div><span class="font-semibold block ${c}"><i class="fa-solid ${ic} mr-1.5"></i>${l}</span><span class="text-xs text-gray-400">${sub}</span></div><div class="flex items-center gap-2"><button class="btn-ghost !px-2.5" onclick="adjust('${k}',-1)">−</button><span class="font-bold w-4 text-center">${cfg[k]}</span><button class="btn-ghost !px-2.5" onclick="adjust('${k}',1)">+</button></div></div>`;
  $('roles').innerHTML=row('und','Undercover(s)','text-red-400','fa-user-ninja','Mot légèrement différent')+row('mrw','Mr. White','text-cyan-400','fa-user-ghost','Aucun mot, doit bluffer')+
   `<div class="flex justify-between items-center bg-darkBg/30 p-3 rounded-xl border border-cardBorder/40"><span class="font-semibold text-emerald-400"><i class="fa-solid fa-user-shield mr-1.5"></i>Civils</span><span class="font-bold text-emerald-400 text-base">${civ}</span></div>`;
@@ -394,7 +450,7 @@ function renderSetup(){
  $('hint').innerHTML=`Conseillé pour ${n} joueurs : ${r} Undercover${r>1?'s':''}, ${m} Mr. White. <button class="text-gold-400 underline" onclick="recommend()">Appliquer</button>`;
  const cnt={};allPairs().filter(p=>cfg.diff.includes(p.d)).forEach(p=>cnt[p.cat]=(cnt[p.cat]||0)+1);
  $('cats').innerHTML=Object.entries(CATS).filter(([k])=>k!=='perso'||customPairs.length).map(([k,[l,e]])=>{const on=selCats().includes(k);return `<button onclick="toggleCat('${k}')" class="px-2.5 py-1 rounded-xl text-xs border transition ${on?'bg-gold-500/20 border-gold-500 text-gold-300':'bg-darkBg border-cardBorder text-gray-500'}"><svg class="ci w-3.5 h-3.5 inline -mt-0.5"><use href="#c-${k}"/></svg> ${l} <span class="opacity-60">${cnt[k]||0}</span></button>`}).join('');
- $('diffs').innerHTML=[1,2,3].map(d=>{const on=cfg.diff.includes(d);return `<button onclick="toggleDiff(${d})" class="px-3 py-1 rounded-xl text-xs border transition ${on?'bg-gold-500/20 border-gold-500 '+DIFF[d][1]:'bg-darkBg border-cardBorder text-gray-500'}">${DIFF[d][0]}</button>`}).join('');
+ $('diffs').innerHTML=[1,2,3,4].map(d=>{const on=cfg.diff.includes(d);return `<button onclick="toggleDiff(${d})" class="px-3 py-1 rounded-xl text-xs border transition ${on?'bg-gold-500/20 border-gold-500 '+DIFF[d][1]:'bg-darkBg border-cardBorder text-gray-500'}">${DIFF[d][0]}</button>`}).join('');
  $('n-bank').textContent=filtered().length;
  $('b-resume').classList.toggle('hidden',!load('uc_game',null));
 }
@@ -481,11 +537,18 @@ function endGame(res){
  $('o-icon').className='w-28 h-28 rounded-full mx-auto flex items-center justify-center p-5 '+T[2];$('o-icon').innerHTML=ic(T[3],'w-full h-full');
  $('o-title').textContent=T[0];$('o-sub').textContent=T[1];$('o-civ').textContent=pair.civ;$('o-und').textContent=pair.und;
  stats.games++;if(res==='CIV')stats.civWins++;else if(res==='MRW')stats.mrwWins++;else stats.undWins++;
- G.list.forEach(p=>{const s=stats.players[p.name]||(stats.players[p.name]={games:0,wins:0});s.games++;
-  if((res==='CIV'&&p.role==='CIV')||(res==='ENEMY'&&p.role!=='CIV')||(res==='MRW'&&p.role==='MRW'))s.wins++});
- save('uc_stats',stats);
+ const won=new Set();G.list.forEach(p=>{const s=stats.players[p.name]||(stats.players[p.name]={games:0,wins:0});s.games++;
+  if((res==='CIV'&&p.role==='CIV')||(res==='ENEMY'&&p.role!=='CIV')||(res==='MRW'&&p.role==='MRW')){s.wins++;won.add(p.name)}});
+ save('uc_stats',stats);renderRank(won);
  $('o-recap').innerHTML=G.list.map(p=>`<div class="flex justify-between items-center bg-darkBg p-3 rounded-xl border border-cardBorder text-xs"><div class="flex items-center gap-2">${av(p.name,30)}<b>${esc(p.name)}</b>${badge(p.role)}${p.alive?'':'<span class="text-gray-500">éliminé</span>'}</div><span class="text-gray-400 italic font-mono">${p.role==='MRW'?'aucun mot':esc(p.word)}</span></div>`).join('');
 }
+function renderRank(won){
+ const cur=new Set(G.list.map(p=>p.name));
+ const arr=Object.entries(stats.players).map(([n,s])=>({n,g:s.games,w:s.wins,pc:s.games?s.wins/s.games:0}))
+  .sort((a,b)=>b.w-a.w||b.pc-a.pc||a.g-b.g||a.n.localeCompare(b.n));
+ const medal=['🥇','🥈','🥉'];
+ $('o-rank').innerHTML=arr.map(p=>{const rk=arr.findIndex(x=>x.w===p.w&&x.pc===p.pc),me=cur.has(p.n);
+  return `<div class="flex items-center justify-between gap-2 p-2.5 rounded-xl border text-xs ${me?'bg-gold-500/10 border-gold-500/40':'bg-darkBg border-cardBorder opacity-70'}"><div class="flex items-center gap-2 flex-wrap"><span class="w-6 text-center text-base font-extrabold">${medal[rk]||rk+1}</span>${av(p.n,28)}<b>${esc(p.n)}</b>${won.has(p.n)?'<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">+1 victoire</span>':''}</div><span class="text-amber-400 font-extrabold whitespace-nowrap">${p.w} V <span class="text-gray-500 font-normal">/ ${p.g} · ${Math.round(p.pc*100)}%</span></span></div>`}).join('')||'<span class="text-xs text-gray-500 italic">Aucune donnée.</span>'}
 function abandon(){if(confirm('Abandonner la partie en cours ?')){localStorage.removeItem('uc_game');show('s-setup')}}
 function resumeGame(){const s=load('uc_game',null);if(!s)return;G=s.G;pair=s.pair;show('s-dash');startTimer();renderDash();
  if(G.pending){openM('m-mrw')}}
