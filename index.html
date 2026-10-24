@@ -112,7 +112,7 @@ body{font-family:'Inter',sans-serif;background:#0b0f17;color:#f3f4f6;touch-actio
   <button onclick="allCats()" class="text-xs text-gold-400 underline">Tout / rien</button></div>
   <div id="cats" class="flex flex-wrap gap-2"></div>
   <div class="flex flex-wrap items-center gap-2"><span class="text-xs text-gray-400">Difficulté :</span><div id="diffs" class="flex gap-2"></div></div>
-  <p class="text-[11px] text-gray-500">Facile : mots éloignés, l'infiltré est vite repéré. Difficile : mots très proches. <span class="text-fuchsia-400">Très difficile : mots quasi identiques (Coca-Cola / Pepsi), démasquer l'infiltré devient un vrai casse-tête.</span></p>
+  <p class="text-[11px] text-gray-500">Facile : mots éloignés, l'infiltré est vite repéré. Moyen : mots du quotidien que tout le monde connaît. Difficile : mots très proches. <span class="text-fuchsia-400">Très difficile : mots quasi identiques (Coca-Cola / Pepsi), démasquer l'infiltré devient un vrai casse-tête.</span></p>
  </div>
 
  <div class="grid md:grid-cols-2 gap-4">
@@ -377,7 +377,41 @@ Poumon|Bronches!;Épaule|Omoplate!;Hanche|Cuisse;Cil|Sourcil;Pupille|Iris!;Saliv
 #culture
 Fée|Sorcière;Chevalier|Samouraï;Viking|Gaulois;Pharaon|Empereur;Gladiateur|Soldat romain;Père Noël|Lutin;Lapin de Pâques|Cloche de Pâques!;Halloween|Carnaval!;Alien|Robot;Super-héros|Super-vilain!;Dracula|Frankenstein;Aladdin|Ali Baba!!;Cendrillon|Blanche-Neige!;Pinocchio|Peter Pan!
 #abstrait
-Sauter|Bondir!!;Ramper|Grimper;Lancer|Jeter!!;Attraper|Saisir!!;Pousser|Tirer;Cacher|Enterrer;Dessiner|Colorier;Écouter|Entendre!!;Goûter|Savourer!!;Sentir|Humer!!;Toucher|Caresser!;Compter|Calculer!;Miser|Parier!!;Dépenser|Gaspiller!;Prêter|Emprunter;Chercher|Fouiller!`;
+Sauter|Bondir!!;Ramper|Grimper;Lancer|Jeter!!;Attraper|Saisir!!;Pousser|Tirer;Cacher|Enterrer;Dessiner|Colorier;Écouter|Entendre!!;Goûter|Savourer!!;Sentir|Humer!!;Toucher|Caresser!;Compter|Calculer!;Miser|Parier!!;Dépenser|Gaspiller!;Prêter|Emprunter;Chercher|Fouiller!
+#food
+Pizza|Quiche;Sushi|Sashimi;Hamburger|Cheeseburger;Nutella|Chocolat;Crêpe|Gaufre;Croissant|Brioche;Baguette|Pain de mie;Yaourt|Glace;Chips|Pop-corn;Bonbon|Sucette;Chewing-gum|Réglisse;Banane|Ananas;Pâtes|Riz;Frites|Purée;Café|Chocolat chaud;Thé|Tisane;Coca|Fanta;Vodka|Whisky;Rhum|Tequila;Champagne|Vin;Beurre|Huile;Gâteau|Muffin;Sandwich|Hot-dog;Kebab|Burger;Pomme|Banane
+#animaux
+Chat|Lion;Chien|Loup;Requin|Baleine;Cheval|Vache;Lapin|Kangourou;Poule|Pigeon;Tortue|Crocodile;Aigle|Hibou;Abeille|Papillon;Éléphant|Mammouth;Ours|Gorille;Panda|Koala;Dauphin|Poisson;Singe|Perroquet;Chameau|Éléphant
+#nature
+Plage|Désert;Mer|Piscine;Montagne|Volcan;Pluie|Neige;Soleil|Étoile;Lune|Étoile;Arbre|Fleur;Forêt|Parc;Rivière|Océan;Nuage|Fumée;Feu|Soleil
+#maison
+Lit|Canapé;Table|Chaise;Chaise|Fauteuil;Porte|Fenêtre;Douche|Bain;Brosse à dents|Brosse à cheveux;Savon|Gel douche;Couteau|Fourchette;Assiette|Plat;Verre|Bouteille;Télé|Ordinateur;Téléphone|Montre;Maison|Appartement;Cuisine|Salon;Salle de bain|Toilettes;Parapluie|Imperméable
+#tech
+Facebook|Twitter;Instagram|Snapchat;TikTok|Instagram;YouTube|Netflix;Google|YouTube;iPhone|iPad;PC|Mac;Mail|WhatsApp;Wi-Fi|4G;Photo|Vidéo;Film|Jeu vidéo;Console|Ordinateur;Télécommande|Manette
+#mode
+Pantalon|Jean;Robe|Pyjama;Chaussures|Chaussettes;Casquette|Lunettes;Bague|Montre;Sac|Valise;Maillot|Short;Costume|Chemise;Maquillage|Parfum;Coiffeur|Dentiste
+#lieux
+École|Hôpital;Cinéma|Restaurant;Plage|Parc;Supermarché|Boutique;Banque|Poste;Hôtel|Maison;Zoo|Cirque;Bibliothèque|École;Ville|Campagne;Paris|Rome;France|Italie;Europe|Amérique;Disneyland|Parc Astérix;Tour Eiffel|Arc de Triomphe;Marseille|Paris
+#transport
+Voiture|Bus;Avion|Train;Vélo|Moto;Camion|Voiture;Bateau|Avion;Taxi|Uber;Métro|Bus;Train|Tramway
+#metiers
+Docteur|Pharmacien;Professeur|Directeur;Policier|Pompier;Cuisinier|Boulanger;Chanteur|Acteur;Footballeur|Basketteur;Avocat|Policier;Pilote|Chauffeur;Serveur|Barman;Maçon|Plombier;Coiffeur|Esthéticienne;Voleur|Policier;Danseur|Chanteur
+#famille
+Père|Mère;Frère|Sœur;Grand-père|Papa;Mariage|Fête;Amour|Amitié;Bébé|Poupée;Ami|Ennemi;Rire|Pleurer;Joie|Colère;Roi|Reine;Garçon|Fille;Homme|Femme;Prince|Roi
+#sport
+Football|Basket;Tennis|Badminton;Natation|Surf;Boxe|Karaté;Course|Marche;Ski|Surf;Golf|Tennis;Ballon|Raquette;Stade|Piscine;Rugby|Football américain;Gymnastique|Fitness;Équipe|Club
+#arts
+Guitare|Piano;Musique|Danse;Cinéma|Télévision;Livre|Film;Peinture|Photo;Concert|Spectacle;Micro|Casque;Radio|Télévision;Harry Potter|Star Wars;Disney|Pixar
+#ecole
+Prof|Élève;Cahier|Livre;Stylo|Feutre;Cartable|Sac à dos;Bac|Brevet;Maths|Français;Récré|Cantine;Examen|Contrôle;Devoir|Leçon;Classe|Amphi;École|Collège;Université|Lycée
+#societe
+Argent|Carte bancaire;Banque|Bourse;Président|Ministre;Prison|Hôpital;Riche|Célèbre;Travail|Vacances;Chômage|Salaire;Magasin|Marché;Prix|Réduction;Voleur|Menteur;Loi|Règle
+#corps
+Main|Doigt;Pied|Jambe;Tête|Visage;Bouche|Lèvres;Nez|Oreille;Œil|Lunettes;Cœur|Cerveau;Médecin|Dentiste;Fièvre|Toux;Sommeil|Fatigue;Sport|Régime;Peau|Cheveux;Sang|Eau
+#culture
+Père Noël|Pâques;Noël|Anniversaire;Halloween|Noël;Cadeau|Gâteau;Ange|Fée;Fantôme|Monstre;Pirate|Voleur;Dragon|Dinosaure;Roi Lion|Aladdin;Mickey|Donald;Spider-Man|Batman;Pokémon|Digimon;Mario|Sonic;Minecraft|Fortnite
+#abstrait
+Courir|Sauter;Dormir|Se reposer;Voler|Nager;Peur|Stress;Chaud|Froid;Grand|Petit;Jour|Soir;Matin|Midi;Été|Hiver;Noir|Blanc;Rouge|Rose;Bleu|Vert;Lundi|Dimanche;Silence|Bruit;Fort|Rapide`;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const load=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch{return d}};
